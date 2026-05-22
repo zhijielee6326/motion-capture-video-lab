@@ -40,6 +40,12 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
 .chart-box { position: relative; height: 260px; }
 .hidden { display: none; }
 
+.deduction-item { background: #0d1b2a; border: 1px solid #2a3f5f; border-radius: 6px; padding: 12px 16px; margin-bottom: 10px; }
+.deduction-item .dim-name { font-weight: 600; color: #e74c3c; font-size: 14px; }
+.deduction-item .dim-reason { font-size: 13px; color: #bcc; margin-top: 4px; }
+.deduction-item .dim-suggest { font-size: 13px; color: #7ec8e3; margin-top: 4px; }
+.suggestion-item { font-size: 14px; line-height: 1.8; color: #e0e0e0; }
+
 /* Fault diagnosis styles */
 .diag-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; }
 .diag-col { text-align: center; padding: 16px; border-radius: 8px; }
@@ -108,11 +114,12 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
         <div>
           <div class="score-big" id="totalScore">--</div>
           <div class="score-label">综合评分</div>
+          <div id="gradeLabel" style="text-align:center;margin-top:6px;font-size:16px;font-weight:600"></div>
           <div class="scores-list">
-            <div class="score-item"><div class="label">ROM 动作幅度</div><div class="val" id="romScore">--</div></div>
-            <div class="score-item"><div class="label">DTW 节奏一致性</div><div class="val" id="dtwScore">--</div></div>
-            <div class="score-item"><div class="label">对称性</div><div class="val" id="symScore">--</div></div>
-            <div class="score-item"><div class="label">RMSE 关节误差</div><div class="val" id="rmseScore">--</div></div>
+            <div class="score-item"><div class="label">ROM 动作幅度</div><div class="val" id="romScore">--</div><div class="label" id="romWeight"></div></div>
+            <div class="score-item"><div class="label">DTW 节奏一致性</div><div class="val" id="dtwScore">--</div><div class="label" id="dtwWeight"></div></div>
+            <div class="score-item"><div class="label">对称性</div><div class="val" id="symScore">--</div><div class="label" id="symWeight"></div></div>
+            <div class="score-item"><div class="label">RMSE 关节误差</div><div class="val" id="rmseScore">--</div><div class="label" id="rmseWeight"></div></div>
           </div>
         </div>
         <div class="chart-box">
@@ -128,7 +135,20 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
         <tbody id="errorBody"></tbody>
       </table>
       <div class="latency" id="latencyInfo"></div>
-      <button class="btn btn-download" id="btnReport" onclick="downloadReport()">下载 PDF 报告</button>
+    </div>
+
+    <div id="deductionCard" class="card hidden">
+      <h3 style="margin-bottom:8px">扣分明细</h3>
+      <div id="deductionList"></div>
+    </div>
+
+    <div id="suggestionCard" class="card hidden">
+      <h3 style="margin-bottom:8px">改进建议</h3>
+      <ul id="suggestionList" style="padding-left:20px;font-size:14px;line-height:2"></ul>
+    </div>
+
+    <div class="card">
+      <button class="btn btn-download" id="btnReport" onclick="downloadReport()">下载 PDF 评估报告</button>
     </div>
   </div>
 
@@ -270,15 +290,67 @@ function showResult(data) {
   document.getElementById('rmseScore').textContent = data.rmse_score;
   document.getElementById('latencyInfo').textContent = '端到端延迟: ' + data.latency_ms + ' ms';
 
-  const tbody = document.getElementById('errorBody');
+  // Grade label
+  var gradeEl = document.getElementById('gradeLabel');
+  if (data.grade) {
+    gradeEl.textContent = data.grade.grade || '';
+    gradeEl.style.color = data.grade.color || '#7ec8e3';
+  }
+
+  // Weights
+  var weights = data.weights || {};
+  if (weights.rom !== undefined) document.getElementById('romWeight').textContent = '权重 ' + Math.round(weights.rom * 100) + '%';
+  if (weights.dtw !== undefined) document.getElementById('dtwWeight').textContent = '权重 ' + Math.round(weights.dtw * 100) + '%';
+  if (weights.symmetry !== undefined) document.getElementById('symWeight').textContent = '权重 ' + Math.round(weights.symmetry * 100) + '%';
+  if (weights.rmse !== undefined) document.getElementById('rmseWeight').textContent = '权重 ' + Math.round(weights.rmse * 100) + '%';
+
+  // Error joints
+  var tbody = document.getElementById('errorBody');
   tbody.innerHTML = '';
-  (data.error_joints || []).forEach(ej => {
-    const tr = document.createElement('tr');
-    const cls = ej.level === 'red' ? 'badge-red' : ej.level === 'yellow' ? 'badge-yellow' : 'badge-green';
-    const txt = ej.level === 'red' ? '严重' : ej.level === 'yellow' ? '注意' : '正常';
-    tr.innerHTML = `<td>${ej.joint}</td><td>${ej.error_degree}°</td><td>#${ej.frame}</td><td><span class="badge ${cls}">${txt}</span></td>`;
+  (data.error_joints || []).forEach(function(ej) {
+    var tr = document.createElement('tr');
+    var cls = ej.level === 'red' ? 'badge-red' : ej.level === 'yellow' ? 'badge-yellow' : 'badge-green';
+    var txt = ej.level === 'red' ? '严重' : ej.level === 'yellow' ? '注意' : '正常';
+    var jn = ej.joint_cn || ej.joint;
+    tr.innerHTML = '<td>' + jn + '</td><td>' + ej.error_degree + '°</td><td>#' + ej.frame + '</td><td><span class="badge ' + cls + '">' + txt + '</span></td>';
     tbody.appendChild(tr);
   });
+
+  // Deductions
+  var deductionCard = document.getElementById('deductionCard');
+  var deductionList = document.getElementById('deductionList');
+  deductionList.innerHTML = '';
+  var deductions = data.deductions || [];
+  if (deductions.length > 0) {
+    deductions.forEach(function(d) {
+      var div = document.createElement('div');
+      div.className = 'deduction-item';
+      div.innerHTML = '<div class="dim-name">' + d.dimension + ' (-' + d.points_lost + '分)</div>' +
+        '<div class="dim-reason">原因：' + d.reason + '</div>' +
+        '<div class="dim-suggest">建议：' + d.suggestion + '</div>';
+      deductionList.appendChild(div);
+    });
+    deductionCard.classList.remove('hidden');
+  } else {
+    deductionCard.classList.add('hidden');
+  }
+
+  // Suggestions
+  var suggestionCard = document.getElementById('suggestionCard');
+  var suggestionList = document.getElementById('suggestionList');
+  suggestionList.innerHTML = '';
+  var suggestions = data.suggestions || [];
+  if (suggestions.length > 0) {
+    suggestions.forEach(function(s) {
+      var li = document.createElement('li');
+      li.className = 'suggestion-item';
+      li.textContent = s;
+      suggestionList.appendChild(li);
+    });
+    suggestionCard.classList.remove('hidden');
+  } else {
+    suggestionCard.classList.add('hidden');
+  }
 
   drawRadar(data);
   document.getElementById('resultSection').classList.remove('hidden');
@@ -324,7 +396,7 @@ function drawRadar(data) {
   radarChart = new Chart(ctx, {
     type: 'radar',
     data: {
-      labels: ['ROM', 'DTW', 'Symmetry', 'RMSE'],
+      labels: ['ROM 动作幅度', 'DTW 节奏一致性', '左右对称性', 'RMSE 关节精度'],
       datasets: [{
         label: 'Score',
         data: [data.rom_score, data.dtw_score, data.symmetry_score, data.rmse_score],

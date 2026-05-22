@@ -16,10 +16,28 @@ from python_ai.preprocess import preprocess, interpolate_missing, gaussian_smoot
 from python_ai.angle import compute_all_angles
 from python_ai.score import full_scoring, save_result
 from python_ai.generate_report import generate_pdf_report
+from python_ai.convert_motive_csv import convert_motive_csv
 from emergency.action_recognition import recognize_actions
 from emergency.scenario_configs import get_scenario
 from emergency.ai_evaluator import evaluate_drill
 from emergency.generate_report import generate_drill_report
+
+
+def _is_motive_csv(path: str) -> bool:
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            first_line = f.readline()
+        return "Format Version" in first_line
+    except Exception:
+        return False
+
+
+def _ensure_fzmotion_csv(path: str) -> str:
+    if _is_motive_csv(path):
+        converted = path.replace(".csv", "_converted.csv")
+        convert_motive_csv(path, converted)
+        return converted
+    return path
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UPLOAD_DIR = os.path.join(BASE_DIR, "server", "static", "uploads")
@@ -82,8 +100,8 @@ async def case2_upload_motion(
 
     std_clean = os.path.join(UPLOAD_DIR, f"{task_id}_std_clean.csv")
     stu_clean = os.path.join(UPLOAD_DIR, f"{task_id}_stu_clean.csv")
-    preprocess(std_path, std_clean)
-    preprocess(stu_path, stu_clean)
+    preprocess(_ensure_fzmotion_csv(std_path), std_clean)
+    preprocess(_ensure_fzmotion_csv(stu_path), stu_clean)
 
     std_df = read_csv(std_clean)
     stu_df = read_csv(stu_clean)
@@ -112,11 +130,14 @@ async def case2_upload_motion(
 
 @app.get("/case2/report/{task_id}")
 async def case2_download_report(task_id: str):
-    pdf_path = os.path.join(REPORTS_DIR, task_id, f"S001_report.pdf")
-    if not os.path.exists(pdf_path):
+    report_dir = os.path.join(REPORTS_DIR, task_id)
+    if not os.path.isdir(report_dir):
         raise HTTPException(404, "Report not found")
-    return FileResponse(pdf_path, media_type="application/pdf",
-                        filename=f"{task_id}_report.pdf")
+    for f in os.listdir(report_dir):
+        if f.endswith("_report.pdf"):
+            return FileResponse(os.path.join(report_dir, f), media_type="application/pdf",
+                                filename=f"{task_id}_{f}")
+    raise HTTPException(404, "Report not found")
 
 
 @app.get("/case2/check_csv")
@@ -185,8 +206,8 @@ async def case2_fault_diagnosis(
     with open(stu_path, "wb") as f:
         shutil.copyfileobj(student_csv.file, f)
 
-    preprocess(std_path, std_path.replace(".csv", "_clean.csv"))
-    preprocess(stu_path, stu_path.replace(".csv", "_clean.csv"))
+    preprocess(_ensure_fzmotion_csv(std_path), std_path.replace(".csv", "_clean.csv"))
+    preprocess(_ensure_fzmotion_csv(stu_path), stu_path.replace(".csv", "_clean.csv"))
     std_df = read_csv(std_path.replace(".csv", "_clean.csv"))
     stu_df = read_csv(stu_path.replace(".csv", "_clean.csv"))
     std_angles = compute_all_angles(std_df)
@@ -290,7 +311,7 @@ async def case4_upload_action(
         shutil.copyfileobj(motion_csv.file, f)
 
     clean_path = os.path.join(UPLOAD_DIR, f"{task_id}_emergency_clean.csv")
-    preprocess(csv_path, clean_path)
+    preprocess(_ensure_fzmotion_csv(csv_path), clean_path)
     df = read_csv(clean_path)
     angles = compute_all_angles(df)
 
@@ -405,15 +426,16 @@ async def case2_ceni_upload(task_id: str = Form(...)):
 
 @app.get("/case2/ceni_download/{task_id}")
 async def case2_ceni_download(task_id: str):
-    pdf_path = os.path.join(REPORTS_DIR, task_id, f"S001_report.pdf")
-    if not os.path.exists(pdf_path):
+    report_dir = os.path.join(REPORTS_DIR, task_id)
+    if not os.path.isdir(report_dir):
         raise HTTPException(404, "Report not found for CENI download")
-
-    file_size = os.path.getsize(pdf_path)
-    simulated_delay = round(300 + (file_size % 200), 1)
-
-    return FileResponse(pdf_path, media_type="application/pdf",
-                        filename=f"{task_id}_ceni_report.pdf")
+    for f in os.listdir(report_dir):
+        if f.endswith("_report.pdf"):
+            file_size = os.path.getsize(os.path.join(report_dir, f))
+            simulated_delay = round(300 + (file_size % 200), 1)
+            return FileResponse(os.path.join(report_dir, f), media_type="application/pdf",
+                                filename=f"{task_id}_ceni_report.pdf")
+    raise HTTPException(404, "Report not found for CENI download")
 
 
 # ──── Root ────

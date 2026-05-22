@@ -1,0 +1,230 @@
+{
+  "final_score": 55.08,
+  "grade": "需要加强",
+  "student_info": {
+    "name": "S002",
+    "action_type": "basketball_shot",
+    "fps": 100.0,
+    "frame_count_std": 300,
+    "frame_count_stu": 4035
+  },
+  "dimensions": [
+    {
+      "name": "ROM 动作幅度",
+      "score": 27.38,
+      "max_score": 100,
+      "color": "red"
+    },
+    {
+      "name": "DTW 节奏一致性",
+      "score": 40.85,
+      "max_score": 100,
+      "color": "red"
+    },
+    {
+      "name": "左右对称性",
+      "score": 97.48,
+      "max_score": 100,
+      "color": "green"
+    },
+    {
+      "name": "RMSE 关节精度",
+      "score": 59.59,
+      "max_score": 100,
+      "color": "yellow"
+    }
+  ],
+  "joint_colors": [
+    {
+      "bone": "RFArm",
+      "joint": "RightElbow",
+      "label": {
+        "grade": "需要加强",
+        "color": "#e74c3c"
+      },
+      "score": 25.7,
+      "color": "red",
+      "rom_score": 0.0,
+      "dtw_score": 0.0,
+      "rmse_score": 77.23,
+      "max_error_degree": 17.85,
+      "max_error_frame": 153
+    },
+    {
+      "bone": "LFArm",
+      "joint": "LeftElbow",
+      "label": {
+        "grade": "需要加强",
+        "color": "#e74c3c"
+      },
+      "score": 49.6,
+      "color": "red",
+      "rom_score": 33.4,
+      "dtw_score": 40.39,
+      "rmse_score": 75.09,
+      "max_error_degree": 20.02,
+      "max_error_frame": 259
+    },
+    {
+      "bone": "RShoulder",
+      "joint": "RightShoulder",
+      "label": {
+        "grade": "需要加强",
+        "color": "#e74c3c"
+      },
+      "score": 68.1,
+      "color": "yellow",
+      "rom_score": 75.38,
+      "dtw_score": 63.73,
+      "rmse_score": 65.21,
+      "max_error_degree": 21.97,
+      "max_error_frame": 166
+    },
+    {
+      "bone": "LShoulder",
+      "joint": "LeftShoulder",
+      "label": {
+        "grade": "需要加强",
+        "color": "#e74c3c"
+      },
+      "score": 66.7,
+      "color": "yellow",
+      "rom_score": 78.14,
+      "dtw_score": 68.99,
+      "rmse_score": 52.89,
+      "max_error_degree": 25.52,
+      "max_error_frame": 100
+    },
+    {
+      "bone": "RShin",
+      "joint": "RightKnee",
+      "label": {
+        "grade": "需要加强",
+        "color": "#e74c3c"
+      },
+      "score": 43.4,
+      "color": "red",
+      "rom_score": 0.0,
+      "dtw_score": 48.86,
+      "rmse_score": 81.32,
+      "max_error_degree": 28.52,
+      "max_error_frame": 299
+    },
+    {
+      "bone": "LShin",
+      "joint": "LeftKnee",
+      "label": {
+        "grade": "需要加强",
+        "color": "#e74c3c"
+      },
+      "score": 21.4,
+      "color": "red",
+      "rom_score": 0.0,
+      "dtw_score": 24.84,
+      "rmse_score": 39.23,
+      "max_error_degree": 44.11,
+      "max_error_frame": 232
+    },
+    {
+      "bone": "RThigh",
+      "joint": "RightHip",
+      "label": {
+        "grade": "需要加强",
+        "color": "#e74c3c"
+      },
+      "score": 29.9,
+      "color": "red",
+      "rom_score": 11.8,
+      "dtw_score": 32.82,
+      "rmse_score": 45.21,
+      "max_error_degree": 30.72,
+      "max_error_frame": 52
+    },
+    {
+      "bone": "LThigh",
+      "joint": "LeftHip",
+      "label": {
+        "grade": "需要加强",
+        "color": "#e74c3c"
+      },
+      "score": 36.0,
+      "color": "red",
+      "rom_score": 20.36,
+      "dtw_score": 47.15,
+      "rmse_score": 40.56,
+      "max_error_degree": 35.48,
+      "max_error_frame": 298
+    }
+  ],
+  "deductions": [
+    {
+      "dimension": "ROM 动作幅度",
+      "points_lost": 72.6,
+      "reason": "动作幅度得分27.38分，低于优秀阈值80分",
+      "suggestion": "注意加大关节活动范围，确保动作充分伸展，对照标准动作模板调整幅度。"
+    },
+    {
+      "dimension": "DTW 节奏一致性",
+      "points_lost": 59.1,
+      "reason": "节奏一致性得分40.85分，动作节奏与标准模板偏差较大",
+      "suggestion": "练习时注意动作节奏，可先慢速跟练标准动作，逐步提速至标准节奏。"
+    },
+    {
+      "dimension": "RMSE 关节精度",
+      "points_lost": 40.4,
+      "reason": "关节角度误差得分59.59分，部分关节与标准动作偏差较大",
+      "suggestion": "重点关注偏差较大的关节，对照标准动作的关键帧逐一调整姿势。"
+    }
+  ],
+  "suggestions": [
+    "建议进行关节活动度训练，每次练习前做充分的热身拉伸。",
+    "建议使用节拍器辅助练习，先以70%速度跟练，再逐步提速。",
+    "建议放慢动作速度，逐帧对照标准姿势进行精确修正。",
+    "左膝偏差严重（44.11°），需重点纠正，建议单独反复练习该关节动作。",
+    "左髋偏差严重（35.48°），需重点纠正，建议单独反复练习该关节动作。",
+    "右髋偏差严重（30.72°），需重点纠正，建议单独反复练习该关节动作。"
+  ],
+  "error_joints": [
+    {
+      "joint": "LeftKnee",
+      "joint_cn": "左膝",
+      "error_degree": 44.11,
+      "frame": 232,
+      "level": "red"
+    },
+    {
+      "joint": "LeftHip",
+      "joint_cn": "左髋",
+      "error_degree": 35.48,
+      "frame": 298,
+      "level": "red"
+    },
+    {
+      "joint": "RightHip",
+      "joint_cn": "右髋",
+      "error_degree": 30.72,
+      "frame": 52,
+      "level": "red"
+    },
+    {
+      "joint": "RightKnee",
+      "joint_cn": "右膝",
+      "error_degree": 28.52,
+      "frame": 299,
+      "level": "red"
+    },
+    {
+      "joint": "LeftShoulder",
+      "joint_cn": "左肩",
+      "error_degree": 25.52,
+      "frame": 100,
+      "level": "red"
+    }
+  ],
+  "weights": {
+    "rom": 0.2,
+    "dtw": 0.2,
+    "symmetry": 0.15,
+    "rmse": 0.45
+  }
+}

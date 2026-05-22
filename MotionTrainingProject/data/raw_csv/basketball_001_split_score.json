@@ -1,0 +1,223 @@
+{
+  "final_score": 69.93,
+  "grade": "及格",
+  "student_info": {
+    "name": "S003",
+    "action_type": "basketball_shot",
+    "fps": 120.0,
+    "frame_count_std": 2017,
+    "frame_count_stu": 2018
+  },
+  "dimensions": [
+    {
+      "name": "ROM 动作幅度",
+      "score": 82.59,
+      "max_score": 100,
+      "color": "green"
+    },
+    {
+      "name": "DTW 节奏一致性",
+      "score": 85.49,
+      "max_score": 100,
+      "color": "green"
+    },
+    {
+      "name": "左右对称性",
+      "score": 75.57,
+      "max_score": 100,
+      "color": "yellow"
+    },
+    {
+      "name": "RMSE 关节精度",
+      "score": 55.51,
+      "max_score": 100,
+      "color": "yellow"
+    }
+  ],
+  "joint_colors": [
+    {
+      "bone": "RFArm",
+      "joint": "RightElbow",
+      "label": {
+        "grade": "及格",
+        "color": "#e67e22"
+      },
+      "score": 43.7,
+      "color": "red",
+      "rom_score": 53.0,
+      "dtw_score": 70.34,
+      "rmse_score": 7.75,
+      "max_error_degree": 90.4,
+      "max_error_frame": 2016
+    },
+    {
+      "bone": "LFArm",
+      "joint": "LeftElbow",
+      "label": {
+        "grade": "及格",
+        "color": "#e67e22"
+      },
+      "score": 87.3,
+      "color": "green",
+      "rom_score": 98.61,
+      "dtw_score": 92.47,
+      "rmse_score": 70.83,
+      "max_error_degree": 34.77,
+      "max_error_frame": 321
+    },
+    {
+      "bone": "RShoulder",
+      "joint": "RightShoulder",
+      "label": {
+        "grade": "及格",
+        "color": "#e67e22"
+      },
+      "score": 90.7,
+      "color": "green",
+      "rom_score": 85.11,
+      "dtw_score": 96.51,
+      "rmse_score": 90.48,
+      "max_error_degree": 15.68,
+      "max_error_frame": 737
+    },
+    {
+      "bone": "LShoulder",
+      "joint": "LeftShoulder",
+      "label": {
+        "grade": "及格",
+        "color": "#e67e22"
+      },
+      "score": 93.6,
+      "color": "green",
+      "rom_score": 93.01,
+      "dtw_score": 96.84,
+      "rmse_score": 90.9,
+      "max_error_degree": 9.29,
+      "max_error_frame": 550
+    },
+    {
+      "bone": "RShin",
+      "joint": "RightKnee",
+      "label": {
+        "grade": "及格",
+        "color": "#e67e22"
+      },
+      "score": 56.5,
+      "color": "yellow",
+      "rom_score": 54.52,
+      "dtw_score": 83.25,
+      "rmse_score": 31.73,
+      "max_error_degree": 66.03,
+      "max_error_frame": 887
+    },
+    {
+      "bone": "LShin",
+      "joint": "LeftKnee",
+      "label": {
+        "grade": "及格",
+        "color": "#e67e22"
+      },
+      "score": 67.6,
+      "color": "yellow",
+      "rom_score": 95.71,
+      "dtw_score": 79.57,
+      "rmse_score": 27.41,
+      "max_error_degree": 71.38,
+      "max_error_frame": 1153
+    },
+    {
+      "bone": "RThigh",
+      "joint": "RightHip",
+      "label": {
+        "grade": "及格",
+        "color": "#e67e22"
+      },
+      "score": 85.7,
+      "color": "green",
+      "rom_score": 95.26,
+      "dtw_score": 93.07,
+      "rmse_score": 68.84,
+      "max_error_degree": 37.51,
+      "max_error_frame": 1913
+    },
+    {
+      "bone": "LThigh",
+      "joint": "LeftHip",
+      "label": {
+        "grade": "及格",
+        "color": "#e67e22"
+      },
+      "score": 71.2,
+      "color": "yellow",
+      "rom_score": 85.51,
+      "dtw_score": 71.9,
+      "rmse_score": 56.16,
+      "max_error_degree": 36.9,
+      "max_error_frame": 1010
+    }
+  ],
+  "deductions": [
+    {
+      "dimension": "左右对称性",
+      "points_lost": 24.4,
+      "reason": "左右对称性得分75.57分，左右侧肢体动作存在明显差异",
+      "suggestion": "关注左右侧关节角度的一致性，针对性加强较弱一侧的训练。"
+    },
+    {
+      "dimension": "RMSE 关节精度",
+      "points_lost": 44.5,
+      "reason": "关节角度误差得分55.51分，部分关节与标准动作偏差较大",
+      "suggestion": "重点关注偏差较大的关节，对照标准动作的关键帧逐一调整姿势。"
+    }
+  ],
+  "suggestions": [
+    "建议进行单侧强化训练，提升较弱一侧的控制力。",
+    "建议放慢动作速度，逐帧对照标准姿势进行精确修正。",
+    "右肘偏差严重（90.4°），需重点纠正，建议单独反复练习该关节动作。",
+    "左膝偏差严重（71.38°），需重点纠正，建议单独反复练习该关节动作。",
+    "右膝偏差严重（66.03°），需重点纠正，建议单独反复练习该关节动作。"
+  ],
+  "error_joints": [
+    {
+      "joint": "RightElbow",
+      "joint_cn": "右肘",
+      "error_degree": 90.4,
+      "frame": 2016,
+      "level": "red"
+    },
+    {
+      "joint": "LeftKnee",
+      "joint_cn": "左膝",
+      "error_degree": 71.38,
+      "frame": 1153,
+      "level": "red"
+    },
+    {
+      "joint": "RightKnee",
+      "joint_cn": "右膝",
+      "error_degree": 66.03,
+      "frame": 887,
+      "level": "red"
+    },
+    {
+      "joint": "RightHip",
+      "joint_cn": "右髋",
+      "error_degree": 37.51,
+      "frame": 1913,
+      "level": "red"
+    },
+    {
+      "joint": "LeftHip",
+      "joint_cn": "左髋",
+      "error_degree": 36.9,
+      "frame": 1010,
+      "level": "red"
+    }
+  ],
+  "weights": {
+    "rom": 0.2,
+    "dtw": 0.2,
+    "symmetry": 0.15,
+    "rmse": 0.45
+  }
+}
