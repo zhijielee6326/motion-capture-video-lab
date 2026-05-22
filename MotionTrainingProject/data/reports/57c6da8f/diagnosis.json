@@ -1,0 +1,102 @@
+{
+  "task_id": "57c6da8f",
+  "fault_type": "marker_occlusion",
+  "fault_description": "右前臂标记点连续30帧遮挡（第{mid}帧附近）",
+  "normal_score": 85.62,
+  "normal_detail": {
+    "rom": 66.73,
+    "dtw": 94.14,
+    "symmetry": 97.48,
+    "rmse": 86.35
+  },
+  "faulty_score": 85.72,
+  "faulty_detail": {
+    "rom": 66.73,
+    "dtw": 94.3,
+    "symmetry": 97.48,
+    "rmse": 86.56
+  },
+  "optimized_score": 86.36,
+  "optimized_detail": {
+    "rom": 68.95,
+    "dtw": 94.32,
+    "symmetry": 97.48,
+    "rmse": 86.83
+  },
+  "score_drop": -0.1,
+  "score_recovery": 0.64,
+  "recovery_pct": 0,
+  "optimization_method": "线性插值补帧 + 高斯滤波(sigma=3)",
+  "normal_error_joints": [
+    {
+      "joint": "RightElbow",
+      "error_degree": 44.37,
+      "frame": 164,
+      "level": "red"
+    },
+    {
+      "joint": "LeftElbow",
+      "error_degree": 27.18,
+      "frame": 212,
+      "level": "red"
+    },
+    {
+      "joint": "RightShoulder",
+      "error_degree": 23.01,
+      "frame": 289,
+      "level": "red"
+    },
+    {
+      "joint": "LeftShoulder",
+      "error_degree": 19.43,
+      "frame": 122,
+      "level": "red"
+    }
+  ],
+  "faulty_error_joints": [
+    {
+      "joint": "LeftElbow",
+      "error_degree": 27.18,
+      "frame": 212,
+      "level": "red"
+    },
+    {
+      "joint": "RightShoulder",
+      "error_degree": 23.01,
+      "frame": 289,
+      "level": "red"
+    },
+    {
+      "joint": "LeftShoulder",
+      "error_degree": 19.43,
+      "frame": 122,
+      "level": "red"
+    }
+  ],
+  "optimized_error_joints": [
+    {
+      "joint": "RightElbow",
+      "error_degree": 43.0,
+      "frame": 163,
+      "level": "red"
+    },
+    {
+      "joint": "LeftElbow",
+      "error_degree": 26.34,
+      "frame": 213,
+      "level": "red"
+    },
+    {
+      "joint": "RightShoulder",
+      "error_degree": 22.39,
+      "frame": 289,
+      "level": "red"
+    },
+    {
+      "joint": "LeftShoulder",
+      "error_degree": 18.79,
+      "frame": 122,
+      "level": "red"
+    }
+  ]
+}

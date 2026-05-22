@@ -1,0 +1,108 @@
+{
+  "task_id": "5cc17aab",
+  "fault_type": "network_delay",
+  "fault_description": "网络延迟导致采样率降为50fps（隔帧丢失）",
+  "normal_score": 85.62,
+  "normal_detail": {
+    "rom": 66.73,
+    "dtw": 94.14,
+    "symmetry": 97.48,
+    "rmse": 86.35
+  },
+  "faulty_score": 86.02,
+  "faulty_detail": {
+    "rom": 67.31,
+    "dtw": 96.11,
+    "symmetry": 97.48,
+    "rmse": 85.57
+  },
+  "optimized_score": 88.15,
+  "optimized_detail": {
+    "rom": 73.11,
+    "dtw": 96.65,
+    "symmetry": 97.48,
+    "rmse": 87.37
+  },
+  "score_drop": -0.4,
+  "score_recovery": 2.13,
+  "recovery_pct": 0,
+  "optimization_method": "线性插值补帧 + 高斯滤波(sigma=3)",
+  "normal_error_joints": [
+    {
+      "joint": "RightElbow",
+      "error_degree": 44.37,
+      "frame": 164,
+      "level": "red"
+    },
+    {
+      "joint": "LeftElbow",
+      "error_degree": 27.18,
+      "frame": 212,
+      "level": "red"
+    },
+    {
+      "joint": "RightShoulder",
+      "error_degree": 23.01,
+      "frame": 289,
+      "level": "red"
+    },
+    {
+      "joint": "LeftShoulder",
+      "error_degree": 19.43,
+      "frame": 122,
+      "level": "red"
+    }
+  ],
+  "faulty_error_joints": [
+    {
+      "joint": "RightElbow",
+      "error_degree": 41.15,
+      "frame": 55,
+      "level": "red"
+    },
+    {
+      "joint": "LeftElbow",
+      "error_degree": 33.58,
+      "frame": 71,
+      "level": "red"
+    },
+    {
+      "joint": "LeftShoulder",
+      "error_degree": 22.47,
+      "frame": 41,
+      "level": "red"
+    },
+    {
+      "joint": "RightShoulder",
+      "error_degree": 20.38,
+      "frame": 96,
+      "level": "red"
+    }
+  ],
+  "optimized_error_joints": [
+    {
+      "joint": "RightElbow",
+      "error_degree": 33.51,
+      "frame": 55,
+      "level": "red"
+    },
+    {
+      "joint": "LeftElbow",
+      "error_degree": 28.14,
+      "frame": 71,
+      "level": "red"
+    },
+    {
+      "joint": "LeftShoulder",
+      "error_degree": 20.62,
+      "frame": 41,
+      "level": "red"
+    },
+    {
+      "joint": "RightShoulder",
+      "error_degree": 18.96,
+      "frame": 99,
+      "level": "red"
+    }
+  ]
+}

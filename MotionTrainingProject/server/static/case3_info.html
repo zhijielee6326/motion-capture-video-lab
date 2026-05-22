@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>案例3 — 虚拟演播数字人内容生产</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;background:#0d1b2a;color:#e0e0e0;min-height:100vh}
+.nav{background:#1b2838;border-bottom:1px solid #2a3f5f;padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-size:16px;font-weight:600;color:#7ec8e3;letter-spacing:1px}
+.nav a{color:#8899aa;text-decoration:none;font-size:13px;margin-left:24px;transition:color .2s}
+.nav a:hover{color:#7ec8e3}
+.nav a.active{color:#7ec8e3;font-weight:600}
+.page-header{background:linear-gradient(135deg,#0d1b2a,#1b2838,#2a4066);padding:48px 32px 32px;text-align:center}
+.page-header .tag{display:inline-block;padding:4px 14px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(68,114,196,.15);color:#4472C4;border:1px solid rgba(68,114,196,.3);margin-bottom:16px}
+.page-header h1{font-size:26px;color:#fff;margin-bottom:8px}
+.page-header p{font-size:14px;color:#7ec8e3;max-width:700px;margin:0 auto;line-height:1.6}
+.container{max-width:1000px;margin:32px auto;padding:0 24px}
+.section{background:#1b2838;border:1px solid #2a3f5f;border-radius:12px;padding:28px;margin-bottom:24px}
+.section h2{font-size:18px;color:#7ec8e3;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #2a3f5f}
+.section h3{font-size:14px;color:#fff;margin:16px 0 10px}
+.section p{font-size:13px;color:#8899aa;line-height:1.8;margin-bottom:8px}
+.flow-box{background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;padding:24px;margin:16px 0;font-family:monospace;font-size:13px;color:#7ec8e3;line-height:2;overflow-x:auto}
+.flow-box .arrow{color:#4472C4}
+.flow-box .label{color:#e0e0e0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:16px 0}
+.info-card{background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;padding:20px}
+.info-card .title{font-size:13px;color:#4472C4;font-weight:600;margin-bottom:10px}
+.info-card ul{list-style:none;font-size:13px;color:#8899aa;line-height:2}
+.info-card ul li::before{content:"›";color:#7ec8e3;margin-right:8px}
+.screenshot-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.screenshot-placeholder{background:#0d1b2a;border:2px dashed #2a3f5f;border-radius:8px;padding:40px;text-align:center;color:#445;font-size:13px;min-height:140px;display:flex;align-items:center;justify-content:center}
+.screenshot-placeholder .icon{font-size:32px;margin-bottom:8px;display:block;color:#2a3f5f}
+.demo-video{background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;padding:40px;text-align:center;margin:16px 0}
+.demo-video .play-icon{font-size:48px;color:#4472C4;margin-bottom:12px}
+.demo-video p{font-size:13px;color:#667}
+.step-list{counter-reset:step}
+.step{display:flex;gap:16px;margin-bottom:20px;align-items:flex-start}
+.step-num{background:#4472C4;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.step-content h4{font-size:14px;color:#fff;margin-bottom:4px}
+.step-content p{font-size:13px;color:#8899aa;line-height:1.6}
+.decision-card{background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;padding:20px;margin-bottom:12px}
+.decision-card .q{font-size:14px;color:#f39c12;font-weight:600;margin-bottom:6px}
+.decision-card .a{font-size:13px;color:#8899aa;line-height:1.6}
+.script-box{background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;padding:20px;margin:12px 0;font-size:13px;line-height:1.8;color:#8899aa}
+.script-box .role{color:#7ec8e3;font-weight:600}
+.script-box .action{color:#4472C4;font-style:italic}
+.script-box del{color:#555;text-decoration:line-through}
+.footer{text-align:center;padding:32px;font-size:12px;color:#445;border-top:1px solid #1b2838;margin-top:24px}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-brand">Motion Capture Lab</div>
+  <div>
+    <a href="/">首页</a>
+    <a href="/case1/info">案例1</a>
+    <a href="/case2/dashboard">案例2</a>
+    <a href="/case3/info" class="active">案例3</a>
+    <a href="/case4/dashboard">案例4</a>
+    <a href="/case4/network">核心网</a>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="tag">项目型实验</div>
+  <h1>案例3：虚拟演播数字人内容生产</h1>
+  <p>基于动捕技术驱动虚拟演播场景，结合多机位切换与 AI 辅助脚本生成，实现面向虚拟内容生产的全流程演示</p>
+</div>
+
+<div class="container">
+
+  <!-- System Architecture -->
+  <div class="section">
+    <h2>系统架构</h2>
+    <div class="flow-box">
+<span class="label">演员（动捕服）</span>
+  <span class="arrow">→ FZMotion 光学摄像头</span>
+  <span class="arrow">→ Motive（骨骼跟踪）</span>
+  <span class="arrow">→ MotionBuilder（角色绑定 + 角色化）</span>
+  <span class="arrow">→ LiveLink（实时数据流）</span>
+  <span class="arrow">→ UE5（虚拟演播场景 + 数字人 + 机位控制）</span>
+  <span class="arrow">→ 屏幕共享/推流 → 远程观看端</span>
+    </div>
+
+    <div class="grid3">
+      <div class="info-card">
+        <div class="title">动捕采集层</div>
+        <ul>
+          <li>FZMotion 光学摄像头</li>
+          <li>Motive 实时骨骼跟踪</li>
+          <li>PoE 交换机数据汇聚</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="title">数据处理层</div>
+        <ul>
+          <li>MotionBuilder 角色绑定</li>
+          <li>LiveLink 数据分发</li>
+          <li>骨骼映射与角色化</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="title">虚拟演播层</div>
+        <ul>
+          <li>UE5 演播场景渲染</li>
+          <li>多机位切换控制</li>
+          <li>远程推流/屏幕共享</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Virtual Studio Scene -->
+  <div class="section">
+    <h2>虚拟演播场景</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-placeholder">
+        <div>
+          <span class="icon">🎬</span><br>
+          演播全景机位<br>
+          <span style="font-size:11px;color:#445">数字人 + 背景大屏 + 演播台</span>
+        </div>
+      </div>
+      <div class="screenshot-placeholder">
+        <div>
+          <span class="icon">📹</span><br>
+          近景特写机位<br>
+          <span style="font-size:11px;color:#445">数字人上半身 + 手势细节</span>
+        </div>
+      </div>
+    </div>
+    <p>场景基于 UE5 Third Person 模板搭建，演播台（平面）、背景大屏（贴图）、桌椅（几何体组合）、三点布光。Manny 角色通过 LiveLink 实时驱动。</p>
+    <h3>机位切换控制</h3>
+    <p>在 UE Blueprint 中实现按键切换：按 <b style="color:#7ec8e3">1</b> 切全景，按 <b style="color:#7ec8e3">2</b> 切特写，使用 Set View Target with Blend 节点实现平滑过渡。</p>
+  </div>
+
+  <!-- AI Script Generation -->
+  <div class="section">
+    <h2>AI 辅助脚本生成</h2>
+    <p>演播脚本由 AI 生成初稿，经人工修订后使用。以下是对比：</p>
+
+    <div class="grid2">
+      <div>
+        <h3>AI 原始稿</h3>
+        <div class="script-box">
+<span class="role">主播：</span>各位观众大家好，欢迎收看今天的虚拟新闻播报。我是数字人主播小北。<br><br>
+<span class="action">[动作：双手交叠放在桌上，身体微微前倾]</span><br><br>
+今天的头条新闻是关于科技创新的最新进展。人工智能技术在各个领域的应用不断深入...<br><br>
+<span class="action">[动作：右手抬起指向背景大屏，身体转向右侧]</span><br><br>
+<span class="role">主播：</span>请看大屏幕上的详细报道。<br><br>
+<span class="action">[场景切换：切到背景大屏视频]</span><br><br>
+<span class="role">主播：</span>以上就是今天的全部内容，感谢收看，我们明天再见。<br><br>
+<span class="action">[动作：鞠躬，双手自然下垂]</span>
+        </div>
+      </div>
+      <div>
+        <h3>人工修订稿</h3>
+        <div class="script-box">
+<span class="role">主播：</span>大家好，欢迎收看今天的播报。<br><br>
+<span class="action">[动作：双手自然下垂站立]</span><br><br>
+<del>今天的头条新闻是关于科技创新的最新进展。人工智能技术在各个领域的应用不断深入...</del><br>
+→ <b style="color:#27ae60">缩短开场白，直入主题，避免大幅度转身动作</b><br><br>
+<span class="role">主播：</span>今天有一条重要消息。<br><br>
+<span class="action">[动作：右手小幅抬起，不超出动捕范围]</span><br><br>
+<del>请看大屏幕上的详细报道。</del><br>
+→ <b style="color:#27ae60">改为直接叙述，不指向屏幕（动捕空间不够）</b><br><br>
+<span class="role">主播：</span>感谢收看，再见。<br><br>
+<span class="action">[动作：轻微点头示意，不做大幅度鞠躬]</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card" style="margin-top:16px">
+      <div class="title">修订要点</div>
+      <ul>
+        <li>缩短台词长度，控制在 2-3 分钟内</li>
+        <li>删除超出动捕空间的大幅度动作（转身 > 90°、举手过头）</li>
+        <li>取消指向背景屏的动作（动捕区域与屏幕位置不一致）</li>
+        <li>用小幅点头代替大幅度鞠躬（避免标记点丢失）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Cognitive Decisions -->
+  <div class="section">
+    <h2>三个认知决策点</h2>
+    <div class="decision-card">
+      <div class="q">决策1：复杂场景 vs 稳定渲染</div>
+      <div class="a">虚拟演播需要高保真场景（灯光、反射、Niagara特效），但复杂场景会降低 UE 帧率，导致 LiveLink 数据堆积。选择用简洁几何体搭建场景，保证 60fps 以上渲染帧率，确保数字人动作流畅。</div>
+    </div>
+    <div class="decision-card">
+      <div class="q">决策2：大幅度动作 vs 动捕稳定性</div>
+      <div class="a">AI 生成的脚本中包含大幅度转身、举手过头等动作，但这些动作在光学动捕中容易导致标记点遮挡或超出捕获范围。需要人工修订脚本，将动作幅度限制在动捕空间内。</div>
+    </div>
+    <div class="decision-card">
+      <div class="q">决策3：普通网络路径 vs 低时延优化路径</div>
+      <div class="a">LiveLink 数据流对网络延迟敏感（要求 < 10ms），推流到远程观看端则需要带宽保障。实验中使用局域网直连保证低延迟，通过 SDN 平台可探索未来网络路径优化方案。</div>
+    </div>
+  </div>
+
+  <!-- Demo -->
+  <div class="section">
+    <h2>实验演示</h2>
+    <div class="demo-video">
+      <div class="play-icon">▶</div>
+      <p>虚拟演播全流程演示视频将在此展示</p>
+      <p style="font-size:11px;color:#445;margin-top:4px">含：动捕驱动 + 机位切换 + AI 脚本执行</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>演员就位，动捕开始</h4>
+        <p>演员穿动捕服在捕获区域内就位，Motive 确认骨骼跟踪正常，MotionBuilder 实时接收数据。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>开场问候（全景机位）</h4>
+        <p>演员站立问候，UE 全景机位展示数字人 + 背景大屏整体画面。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>内容播报 + 机位切换</h4>
+        <p>演员播报内容，按 2 切特写机位展示手势细节，按 1 切回全景。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>结束鞠躬</h4>
+        <p>播报完毕，演员轻微点头示意，全景机位定格。</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  动捕视频采集与传输实验 &copy; 2026 &nbsp;|&nbsp; <a href="/" style="color:#4472C4;text-decoration:none">返回首页</a>
+</div>
+</body>
+</html>

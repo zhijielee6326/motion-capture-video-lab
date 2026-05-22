@@ -1,0 +1,102 @@
+{
+  "task_id": "dfa8211f",
+  "fault_type": "marker_occlusion",
+  "fault_description": "右前臂标记点连续30帧遮挡（第{mid}帧附近）",
+  "normal_score": 92.3,
+  "normal_detail": {
+    "rom": 82.88,
+    "dtw": 97.52,
+    "symmetry": 97.48,
+    "rmse": 92.36
+  },
+  "faulty_score": 92.26,
+  "faulty_detail": {
+    "rom": 82.88,
+    "dtw": 97.47,
+    "symmetry": 97.48,
+    "rmse": 92.25
+  },
+  "optimized_score": 92.62,
+  "optimized_detail": {
+    "rom": 84.01,
+    "dtw": 97.52,
+    "symmetry": 97.48,
+    "rmse": 92.47
+  },
+  "score_drop": 0.04,
+  "score_recovery": 0.36,
+  "recovery_pct": 900.0,
+  "optimization_method": "线性插值补帧 + 高斯滤波(sigma=3)",
+  "normal_error_joints": [
+    {
+      "joint": "LeftElbow",
+      "error_degree": 24.16,
+      "frame": 280,
+      "level": "red"
+    },
+    {
+      "joint": "RightElbow",
+      "error_degree": 18.71,
+      "frame": 185,
+      "level": "red"
+    },
+    {
+      "joint": "LeftShoulder",
+      "error_degree": 14.31,
+      "frame": 263,
+      "level": "yellow"
+    },
+    {
+      "joint": "RightShoulder",
+      "error_degree": 12.23,
+      "frame": 10,
+      "level": "yellow"
+    }
+  ],
+  "faulty_error_joints": [
+    {
+      "joint": "LeftElbow",
+      "error_degree": 24.16,
+      "frame": 280,
+      "level": "red"
+    },
+    {
+      "joint": "LeftShoulder",
+      "error_degree": 14.31,
+      "frame": 263,
+      "level": "yellow"
+    },
+    {
+      "joint": "RightShoulder",
+      "error_degree": 12.23,
+      "frame": 10,
+      "level": "yellow"
+    }
+  ],
+  "optimized_error_joints": [
+    {
+      "joint": "LeftElbow",
+      "error_degree": 23.73,
+      "frame": 280,
+      "level": "red"
+    },
+    {
+      "joint": "RightElbow",
+      "error_degree": 18.26,
+      "frame": 181,
+      "level": "red"
+    },
+    {
+      "joint": "LeftShoulder",
+      "error_degree": 13.84,
+      "frame": 258,
+      "level": "yellow"
+    },
+    {
+      "joint": "RightShoulder",
+      "error_degree": 11.91,
+      "frame": 14,
+      "level": "yellow"
+    }
+  ]
+}

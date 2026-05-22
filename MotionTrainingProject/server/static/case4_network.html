@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>核心网状态监控</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0a1628; color: #e0e0e0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+h1 { font-size: 22px; color: #7ec8e3; margin-bottom: 12px; letter-spacing: 2px; }
+.subtitle { font-size: 13px; color: #556; margin-bottom: 40px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 700px; width: 100%; }
+.card { background: #1b2838; border: 1px solid #2a3f5f; border-radius: 12px; padding: 32px 24px; text-align: center; transition: border-color .4s, box-shadow .4s; }
+.card.connected { border-color: #27ae60; box-shadow: 0 0 20px rgba(39,174,96,.15); }
+.card-name { font-size: 16px; color: #aab; margin-bottom: 20px; letter-spacing: 1px; }
+.dot { width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 12px; transition: background .4s, box-shadow .4s; }
+.dot-off { background: #333; box-shadow: none; }
+.dot-on { background: #27ae60; box-shadow: 0 0 16px rgba(39,174,96,.5); }
+.status-text { font-size: 13px; font-weight: 600; letter-spacing: 1px; }
+.status-off { color: #666; }
+.status-on { color: #27ae60; }
+.reset-btn { margin-top: 32px; padding: 10px 28px; background: transparent; color: #7ec8e3; border: 1px solid #2a3f5f; border-radius: 6px; cursor: pointer; font-size: 13px; transition: all .2s; }
+.reset-btn:hover { background: #1b2838; border-color: #7ec8e3; }
+</style>
+</head>
+<body>
+<h1>核心网状态监控</h1>
+<div class="subtitle">Core Network Status — Emergency Drill</div>
+<div class="grid">
+  <div class="card" id="card-0">
+    <div class="card-name">终端接入</div>
+    <div class="dot dot-off" id="dot-0"></div>
+    <div class="status-text status-off" id="text-0">OFFLINE</div>
+  </div>
+  <div class="card" id="card-1">
+    <div class="card-name">用户注册</div>
+    <div class="dot dot-off" id="dot-1"></div>
+    <div class="status-text status-off" id="text-1">OFFLINE</div>
+  </div>
+  <div class="card" id="card-2">
+    <div class="card-name">会话建立</div>
+    <div class="dot dot-off" id="dot-2"></div>
+    <div class="status-text status-off" id="text-2">OFFLINE</div>
+  </div>
+  <div class="card" id="card-3">
+    <div class="card-name">视频回传</div>
+    <div class="dot dot-off" id="dot-3"></div>
+    <div class="status-text status-off" id="text-3">OFFLINE</div>
+  </div>
+</div>
+<button class="reset-btn" onclick="resetAll()">RESET ALL</button>
+<script>
+var stepNames = ["终端接入", "用户注册", "会话建立", "视频回传"];
+
+function updateUI(data) {
+  var steps = data.steps || {};
+  stepNames.forEach(function(name, i) {
+    var status = steps[name] || "disconnected";
+    var card = document.getElementById("card-" + i);
+    var dot = document.getElementById("dot-" + i);
+    var text = document.getElementById("text-" + i);
+    if (status === "connected") {
+      card.className = "card connected";
+      dot.className = "dot dot-on";
+      text.className = "status-text status-on";
+      text.textContent = "ONLINE";
+    } else {
+      card.className = "card";
+      dot.className = "dot dot-off";
+      text.className = "status-text status-off";
+      text.textContent = "OFFLINE";
+    }
+  });
+}
+
+function poll() {
+  fetch("/case4/network_status")
+    .then(function(r) { return r.json(); })
+    .then(updateUI)
+    .catch(function() {});
+}
+
+function resetAll() {
+  stepNames.forEach(function(name) {
+    fetch("/case4/set_network_status", {
+      method: "POST",
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: "step=" + encodeURIComponent(name) + "&status=disconnected"
+    });
+  });
+  setTimeout(poll, 500);
+}
+
+setInterval(poll, 2000);
+poll();
+</script>
+</body>
+</html>

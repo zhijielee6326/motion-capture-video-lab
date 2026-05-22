@@ -1,0 +1,149 @@
+{
+  "total_score": 54.43,
+  "rom_score": 27.38,
+  "dtw_score": 40.85,
+  "symmetry_score": 97.48,
+  "rmse_score": 59.59,
+  "error_joints": [
+    {
+      "joint": "LeftKnee",
+      "error_degree": 44.11,
+      "frame": 232,
+      "level": "red"
+    },
+    {
+      "joint": "LeftHip",
+      "error_degree": 35.48,
+      "frame": 298,
+      "level": "red"
+    },
+    {
+      "joint": "RightHip",
+      "error_degree": 30.72,
+      "frame": 52,
+      "level": "red"
+    },
+    {
+      "joint": "RightKnee",
+      "error_degree": 28.52,
+      "frame": 299,
+      "level": "red"
+    },
+    {
+      "joint": "LeftShoulder",
+      "error_degree": 25.52,
+      "frame": 100,
+      "level": "red"
+    }
+  ],
+  "student_id": "S002",
+  "action_type": "basketball_shot",
+  "joint_details": {
+    "RightElbow": {
+      "rom_score": 0.0,
+      "dtw_score": 0.0,
+      "rmse_score": 77.23,
+      "rmse_value": 11.39,
+      "std_rom": 10.58,
+      "stu_rom": 120.34,
+      "dtw_distance": 210757.32,
+      "max_error_frame": 153,
+      "max_error_degree": 17.85
+    },
+    "LeftElbow": {
+      "rom_score": 33.4,
+      "dtw_score": 40.39,
+      "rmse_score": 75.09,
+      "rmse_value": 12.45,
+      "std_rom": 9.81,
+      "stu_rom": 43.12,
+      "dtw_distance": 120254.48,
+      "max_error_frame": 259,
+      "max_error_degree": 20.02
+    },
+    "RightShoulder": {
+      "rom_score": 75.38,
+      "dtw_score": 63.73,
+      "rmse_score": 65.21,
+      "rmse_value": 17.4,
+      "std_rom": 8.13,
+      "stu_rom": 20.44,
+      "dtw_distance": 73169.92,
+      "max_error_frame": 166,
+      "max_error_degree": 21.97
+    },
+    "LeftShoulder": {
+      "rom_score": 78.14,
+      "dtw_score": 68.99,
+      "rmse_score": 52.89,
+      "rmse_value": 23.56,
+      "std_rom": 4.66,
+      "stu_rom": 15.59,
+      "dtw_distance": 62558.01,
+      "max_error_frame": 100,
+      "max_error_degree": 25.52
+    },
+    "RightKnee": {
+      "rom_score": 0.0,
+      "dtw_score": 48.86,
+      "rmse_score": 81.32,
+      "rmse_value": 9.34,
+      "std_rom": 0.36,
+      "stu_rom": 75.34,
+      "dtw_distance": 107755.93,
+      "max_error_frame": 299,
+      "max_error_degree": 28.52
+    },
+    "LeftKnee": {
+      "rom_score": 0.0,
+      "dtw_score": 24.84,
+      "rmse_score": 39.23,
+      "rmse_value": 30.38,
+      "std_rom": 0.62,
+      "stu_rom": 81.51,
+      "dtw_distance": 151963.46,
+      "max_error_frame": 232,
+      "max_error_degree": 44.11
+    },
+    "RightHip": {
+      "rom_score": 11.8,
+      "dtw_score": 32.82,
+      "rmse_score": 45.21,
+      "rmse_value": 27.39,
+      "std_rom": 1.34,
+      "stu_rom": 45.44,
+      "dtw_distance": 135525.91,
+      "max_error_frame": 52,
+      "max_error_degree": 30.72
+    },
+    "LeftHip": {
+      "rom_score": 20.36,
+      "dtw_score": 47.15,
+      "rmse_score": 40.56,
+      "rmse_value": 29.72,
+      "std_rom": 1.37,
+      "stu_rom": 41.19,
+      "dtw_distance": 106625.93,
+      "max_error_frame": 298,
+      "max_error_degree": 35.48
+    },
+    "Knee_symmetry": {
+      "symmetry_score": 99.78,
+      "symmetry_diff": 0.11
+    },
+    "Elbow_symmetry": {
+      "symmetry_score": 94.89,
+      "symmetry_diff": 2.55
+    },
+    "Shoulder_symmetry": {
+      "symmetry_score": 96.29,
+      "symmetry_diff": 1.86
+    },
+    "Hip_symmetry": {
+      "symmetry_score": 98.97,
+      "symmetry_diff": 0.51
+    }
+  },
+  "task_id": "586937d4",
+  "report_url": "/case2/report/586937d4"
+}

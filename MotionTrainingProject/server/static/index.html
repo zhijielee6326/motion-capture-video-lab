@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>动捕视频采集与传输实验 — 演示系统</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;background:#0d1b2a;color:#e0e0e0;min-height:100vh}
+.nav{background:#1b2838;border-bottom:1px solid #2a3f5f;padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-size:16px;font-weight:600;color:#7ec8e3;letter-spacing:1px}
+.nav-links a{color:#8899aa;text-decoration:none;font-size:13px;margin-left:24px;transition:color .2s}
+.nav-links a:hover{color:#7ec8e3}
+.hero{background:linear-gradient(135deg,#0d1b2a 0%,#1b2838 40%,#2a4066 100%);padding:60px 32px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at center,rgba(126,200,227,.06) 0%,transparent 60%);pointer-events:none}
+.hero h1{font-size:28px;font-weight:700;color:#fff;margin-bottom:10px;position:relative}
+.hero p{font-size:14px;color:#7ec8e3;letter-spacing:2px;position:relative}
+.container{max-width:1100px;margin:40px auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.card{background:#1b2838;border:1px solid #2a3f5f;border-radius:12px;padding:28px;transition:transform .25s,border-color .3s,box-shadow .3s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-3px);border-color:#4472C4;box-shadow:0 8px 24px rgba(68,114,196,.12)}
+.card-num{position:absolute;top:0;right:0;font-size:64px;font-weight:800;color:rgba(126,200,227,.06);line-height:1;padding:8px 16px}
+.card-tag{display:inline-block;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:600;margin-bottom:14px;letter-spacing:1px}
+.tag-verify{background:rgba(39,174,96,.15);color:#27ae60;border:1px solid rgba(39,174,96,.3)}
+.tag-project{background:rgba(68,114,196,.15);color:#4472C4;border:1px solid rgba(68,114,196,.3)}
+.card h2{font-size:18px;margin-bottom:10px;color:#fff;font-weight:600}
+.card p{font-size:13px;color:#8899aa;line-height:1.7;margin-bottom:16px;min-height:55px}
+.card-tech{font-size:11px;margin-bottom:18px}
+.card-tech span{display:inline-block;background:rgba(126,200,227,.08);color:#7ec8e3;padding:3px 10px;border-radius:4px;margin:2px 4px 2px 0;border:1px solid rgba(126,200,227,.15)}
+.btn{display:inline-block;padding:10px 24px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:500;transition:all .2s;letter-spacing:.5px}
+.btn-blue{background:#4472C4;color:#fff;border:1px solid #4472C4}
+.btn-blue:hover{background:#5a86d6;box-shadow:0 2px 8px rgba(68,114,196,.3)}
+.btn-outline{background:transparent;color:#7ec8e3;border:1px solid #2a3f5f}
+.btn-outline:hover{border-color:#7ec8e3;background:rgba(126,200,227,.05)}
+.footer{text-align:center;padding:32px;font-size:12px;color:#445;border-top:1px solid #1b2838}
+.footer a{color:#4472C4;text-decoration:none}
+@media(max-width:700px){.container{grid-template-columns:1fr}.hero h1{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="nav">
+  <div class="nav-brand">Motion Capture Lab</div>
+  <div class="nav-links">
+    <a href="/">首页</a>
+    <a href="/case2/dashboard">案例2</a>
+    <a href="/case4/dashboard">案例4</a>
+    <a href="/case4/network">核心网监控</a>
+    <a href="/docs">API</a>
+  </div>
+</div>
+
+<div class="hero">
+  <h1>动捕视频采集与传输实验演示系统</h1>
+  <p>MOTION CAPTURE VIDEO COLLECTION &amp; TRANSMISSION EXPERIMENT</p>
+</div>
+
+<div class="container">
+  <div class="card">
+    <div class="card-num">01</div>
+    <span class="card-tag tag-verify">验证型</span>
+    <h2>案例1：动捕驱动虚拟数字人互动教学</h2>
+    <p>FZMotion 光学动捕 → Motive → MotionBuilder → UE LiveLink 实时驱动虚拟数字人，验证系统精度与鲁棒性。</p>
+    <div class="card-tech">
+      <span>FZMotion</span><span>Motive</span><span>MotionBuilder</span><span>UE5 LiveLink</span>
+    </div>
+    <a href="/case1/info" class="btn btn-outline">实验说明</a>
+  </div>
+
+  <div class="card">
+    <div class="card-num">02</div>
+    <span class="card-tag tag-project">项目型</span>
+    <h2>案例2：AI 动作质量评分系统</h2>
+    <p>骨骼数据 CSV 上传 → 四维 AI 评分 → PDF 报告 → 故障诊断与优化对比，支持 CENI 未来网络回传。</p>
+    <div class="card-tech">
+      <span>FastAPI</span><span>FZMotion CSV</span><span>Python AI</span><span>CENI</span>
+    </div>
+    <a href="/case2/dashboard" class="btn btn-blue">进入系统</a>
+  </div>
+
+  <div class="card">
+    <div class="card-num">03</div>
+    <span class="card-tag tag-project">项目型</span>
+    <h2>案例3：虚拟演播数字人内容生产</h2>
+    <p>动捕驱动虚拟演播场景，支持多机位切换与 AI 辅助脚本生成，面向虚拟内容生产全流程。</p>
+    <div class="card-tech">
+      <span>LiveLink</span><span>UE5 虚拟演播</span><span>机位切换</span><span>AI 脚本</span>
+    </div>
+    <a href="/case3/info" class="btn btn-outline">实验说明</a>
+  </div>
+
+  <div class="card">
+    <div class="card-num">04</div>
+    <span class="card-tag tag-project">项目型</span>
+    <h2>案例4：应急通信演练虚拟仿真</h2>
+    <p>应急通信抢修场景仿真，动作识别 + AI 多维评价 + 核心网状态实时联动，支持地震/火灾双场景。</p>
+    <div class="card-tech">
+      <span>动作识别</span><span>核心网仿真</span><span>AI 评价</span><span>UE 场景</span>
+    </div>
+    <a href="/case4/dashboard" class="btn btn-blue">进入系统</a>
+    <a href="/case4/network" class="btn btn-outline" style="margin-left:8px">核心网监控</a>
+  </div>
+</div>
+
+<div class="footer">
+  动捕视频采集与传输实验 &copy; 2026 &nbsp;|&nbsp; <a href="/docs">API 文档</a>
+</div>
+</body>
+</html>

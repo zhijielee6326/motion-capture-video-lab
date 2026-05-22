@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>应急通信演练虚拟仿真系统</title>
+<script src="/static/chart.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; color: #e0e0e0; }
+.header { background: #1b2838; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a3f5f; }
+.header h1 { font-size: 18px; color: #7ec8e3; }
+.header select { padding: 6px 12px; background: #1b2838; color: #e0e0e0; border: 1px solid #2a3f5f; border-radius: 4px; }
+.container { max-width: 1200px; margin: 16px auto; padding: 0 16px; display: grid; grid-template-columns: 1fr 340px; gap: 16px; }
+.card { background: #1b2838; border-radius: 8px; border: 1px solid #2a3f5f; padding: 16px; }
+.card h3 { font-size: 14px; color: #7ec8e3; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.left-col { display: flex; flex-direction: column; gap: 16px; }
+.right-col { display: flex; flex-direction: column; gap: 16px; }
+
+.upload-area { border: 2px dashed #2a3f5f; border-radius: 8px; padding: 20px; text-align: center; }
+.upload-area p { color: #888; margin: 8px 0; }
+.btn { padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
+.btn-primary { background: #4472C4; color: #fff; }
+.btn-primary:hover { background: #3a64b0; }
+.btn-danger { background: #c0392b; color: #fff; }
+.btn-danger:hover { background: #a93226; }
+
+.action-list { list-style: none; }
+.action-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #1a2a40; font-size: 13px; }
+.action-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; }
+.action-icon.done { background: #27ae60; }
+.action-icon.active { background: #f39c12; }
+.action-icon.pending { background: #555; }
+.action-conf { color: #888; font-size: 11px; margin-left: auto; }
+
+.status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.status-item { background: #0d1b2a; padding: 10px; border-radius: 4px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-green { background: #27ae60; box-shadow: 0 0 6px #27ae60; }
+.dot-red { background: #e74c3c; box-shadow: 0 0 6px #e74c3c; }
+
+.score-big { font-size: 42px; font-weight: 700; color: #7ec8e3; text-align: center; }
+.score-label { font-size: 12px; color: #888; text-align: center; }
+.chart-box { height: 220px; position: relative; }
+
+.issue-list { font-size: 12px; color: #ccc; }
+.issue-list li { padding: 4px 0; border-bottom: 1px solid #1a2a40; }
+
+#loading { display: none; text-align: center; padding: 30px; color: #888; }
+.hidden { display: none !important; }
+
+@media (max-width: 800px) {
+  .container { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div style="background:#1b2838;border-bottom:1px solid #2a3f5f;padding:14px 32px;display:flex;align-items:center;justify-content:space-between">
+  <div style="font-size:16px;font-weight:600;color:#7ec8e3;letter-spacing:1px">Motion Capture Lab</div>
+  <div style="font-size:13px">
+    <a href="/" style="color:#8899aa;text-decoration:none;margin-left:24px">首页</a>
+    <a href="/case2/dashboard" style="color:#8899aa;text-decoration:none;margin-left:24px">案例2</a>
+    <a href="/case4/dashboard" style="color:#7ec8e3;text-decoration:none;margin-left:24px;font-weight:600">案例4</a>
+    <a href="/case4/network" style="color:#8899aa;text-decoration:none;margin-left:24px">核心网</a>
+  </div>
+</div>
+<div class="header">
+  <h1>应急通信演练虚拟仿真系统 — 案例4</h1>
+  <a href="/" style="font-size:12px;color:#4472C4;text-decoration:none;margin-left:12px">返回首页</a>
+  <select id="scenarioSelect">
+    <option value="earthquake">方案1: 山区地震通信抢修</option>
+    <option value="fire">方案2: 城市火灾应急通信保障</option>
+  </select>
+</div>
+
+<div class="container">
+  <div class="left-col">
+    <div class="card">
+      <h3>数据上传</h3>
+      <div class="upload-area">
+        <p>上传动捕 CSV 文件（FZMotion 导出）</p>
+        <input type="file" id="motionCsv" accept=".csv">
+        <br><br>
+        <button class="btn btn-primary" id="btnAnalyze" onclick="analyze()">开始分析</button>
+      </div>
+    </div>
+
+    <div id="loading"><p>分析中...</p></div>
+
+    <div id="resultSection" class="hidden">
+      <div class="card">
+        <h3>任务进度</h3>
+        <ul class="action-list" id="actionList"></ul>
+      </div>
+      <div class="card">
+        <h3>核心网状态</h3>
+        <div class="status-grid" id="networkGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div class="card" id="scoreCard" style="display:none">
+      <h3>演练评分</h3>
+      <div class="score-big" id="totalScore">--</div>
+      <div class="score-label">综合评分</div>
+      <div class="chart-box"><canvas id="radarChart"></canvas></div>
+    </div>
+
+    <div class="card" id="issueCard" style="display:none">
+      <h3>问题诊断</h3>
+      <ul class="issue-list" id="issueList"></ul>
+    </div>
+
+    <div class="card">
+      <h3>故障注入</h3>
+      <select id="faultType" style="width:100%;padding:6px;background:#0d1b2a;color:#e0e0e0;border:1px solid #2a3f5f;border-radius:4px;margin-bottom:8px">
+        <option value="network_delay">网络延迟 300ms</option>
+        <option value="packet_loss">随机丢包 1%</option>
+        <option value="marker_occlusion">标记点遮挡（右前臂）</option>
+        <option value="binding_error">骨骼绑定偏差 10°</option>
+      </select>
+      <button class="btn btn-danger" onclick="injectFault()">注入故障</button>
+      <div id="faultResult" style="margin-top:8px;font-size:12px;color:#f39c12"></div>
+    </div>
+
+    <div class="card">
+      <h3>改进建议</h3>
+      <ul class="issue-list" id="suggestList"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+let radarChart = null;
+
+async function analyze() {
+  const file = document.getElementById('motionCsv').files[0];
+  if (!file) { alert('请选择 CSV 文件'); return; }
+  const scenario = document.getElementById('scenarioSelect').value;
+  document.getElementById('btnAnalyze').disabled = true;
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('resultSection').classList.add('hidden');
+
+  const fd = new FormData();
+  fd.append('motion_csv', file);
+  fd.append('scenario', scenario);
+
+  try {
+    const resp = await fetch('/case4/upload_action', { method: 'POST', body: fd });
+    const data = await resp.json();
+    showResult(data);
+  } catch(e) { alert('Error: ' + e.message); }
+  finally {
+    document.getElementById('btnAnalyze').disabled = false;
+    document.getElementById('loading').style.display = 'none';
+  }
+}
+
+function showResult(data) {
+  const actionList = document.getElementById('actionList');
+  actionList.innerHTML = '';
+  (data.actions || []).forEach(a => {
+    const cls = a.status === 'completed' ? 'done' : a.status === 'detected' ? 'active' : 'pending';
+    const icon = a.status === 'completed' ? '✓' : a.status === 'detected' ? '●' : str(a.id);
+    actionList.innerHTML += `<li class="action-item"><span class="action-icon ${cls}">${icon}</span><span>${a.name}</span><span class="action-conf">${(a.confidence*100).toFixed(0)}%</span></li>`;
+  });
+
+  const netGrid = document.getElementById('networkGrid');
+  netGrid.innerHTML = '';
+  (data.core_network_status || []).forEach(s => {
+    const dotCls = s.status === 'connected' ? 'dot-green' : 'dot-red';
+    const label = s.status === 'connected' ? '已连接' : '未连接';
+    netGrid.innerHTML += `<div class="status-item"><span class="dot ${dotCls}"></span><span>${s.step}</span><span style="margin-left:auto;color:#888">${label}</span></div>`;
+  });
+
+  document.getElementById('totalScore').textContent = data.total_score;
+  document.getElementById('scoreCard').style.display = 'block';
+
+  drawRadar(data);
+
+  const issueList = document.getElementById('issueList');
+  issueList.innerHTML = '';
+  (data.issues || []).forEach(i => { issueList.innerHTML += `<li>${i}</li>`; });
+  document.getElementById('issueCard').style.display = 'block';
+
+  const suggestList = document.getElementById('suggestList');
+  suggestList.innerHTML = '';
+  (data.suggestions || []).forEach(s => { suggestList.innerHTML += `<li>${s}</li>`; });
+
+  document.getElementById('resultSection').classList.remove('hidden');
+}
+
+function drawRadar(data) {
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  if (radarChart) radarChart.destroy();
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['动作规范性', '任务流程', '网络恢复', '协同效率'],
+      datasets: [{
+        label: 'Score',
+        data: [data.action_score, data.process_score, data.network_score, data.synergy_score],
+        backgroundColor: 'rgba(126,200,227,0.2)',
+        borderColor: '#7ec8e3',
+        pointBackgroundColor: '#7ec8e3',
+      }]
+    },
+    options: {
+      scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 25, color: '#888' }, grid: { color: '#2a3f5f' }, pointLabels: { color: '#aaa' } } },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+async function injectFault() {
+  const ft = document.getElementById('faultType').value;
+  const fd = new FormData();
+  fd.append('fault_type', ft);
+  fd.append('severity', 'medium');
+  try {
+    const resp = await fetch('/case4/inject_fault', { method: 'POST', body: fd });
+    const data = await resp.json();
+    document.getElementById('faultResult').textContent = '⚠ ' + data.description;
+  } catch(e) { alert('Error: ' + e.message); }
+}
+</script>
+</body>
+</html>

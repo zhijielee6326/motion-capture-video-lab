@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI动作质量评分系统</title>
+<script src="/static/chart.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; color: #e0e0e0; }
+.header { background: #1b2838; color: #7ec8e3; border-bottom: 1px solid #2a3f5f; padding: 16px 32px; font-size: 20px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+.container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+.card { background: #1b2838; border: 1px solid #2a3f5f; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.3); padding: 24px; margin-bottom: 20px; }
+.upload-row { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 13px; color: #8899aa; }
+.field input, .field select { padding: 8px 12px; background: #0d1b2a; color: #e0e0e0; border: 1px solid #2a3f5f; border-radius: 4px; font-size: 14px; }
+.btn { padding: 10px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; }
+.btn-primary { background: #4472C4; color: #fff; }
+.btn-primary:hover { background: #3a64b0; }
+.btn-primary:disabled { background: #a0b4d8; cursor: not-allowed; }
+.btn-download { background: #548235; color: #fff; margin-top: 12px; }
+.btn-danger { background: #c0392b; color: #fff; }
+.btn-danger:hover { background: #a93226; }
+.result-grid { display: grid; grid-template-columns: 300px 1fr; gap: 24px; }
+.score-big { font-size: 48px; font-weight: 700; color: #7ec8e3; text-align: center; }
+.score-label { font-size: 14px; color: #8899aa; text-align: center; }
+.scores-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.score-item { background: #0d1b2a; padding: 10px; border-radius: 4px; border: 1px solid #2a3f5f; }
+.score-item .label { font-size: 12px; color: #8899aa; }
+.score-item .val { font-size: 20px; font-weight: 600; color: #e0e0e0; }
+.error-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.error-table th, .error-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #2a3f5f; font-size: 13px; color: #e0e0e0; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; color: #fff; }
+.badge-red { background: #e74c3c; }
+.badge-yellow { background: #f39c12; }
+.badge-green { background: #27ae60; }
+.latency { font-size: 13px; color: #7ec8e3; margin-top: 8px; }
+#loading { display: none; text-align: center; padding: 40px; color: #7ec8e3; }
+.chart-box { position: relative; height: 260px; }
+.hidden { display: none; }
+
+/* Fault diagnosis styles */
+.diag-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; }
+.diag-col { text-align: center; padding: 16px; border-radius: 8px; }
+.diag-col.normal { background: #1a3320; }
+.diag-col.faulty { background: #331a1a; }
+.diag-col.optimized { background: #1a2640; }
+.diag-col .diag-title { font-size: 13px; color: #8899aa; margin-bottom: 4px; }
+.diag-col .diag-score { font-size: 36px; font-weight: 700; }
+.diag-col.normal .diag-score { color: #4caf50; }
+.diag-col.faulty .diag-score { color: #ef5350; }
+.diag-col.optimized .diag-score { color: #42a5f5; }
+.diag-detail { font-size: 12px; color: #8899aa; margin-top: 8px; }
+.diag-detail span { display: inline-block; width: 70px; text-align: right; margin-right: 4px; }
+.diag-arrow { text-align: center; font-size: 14px; color: #8899aa; padding: 8px 0; }
+.diag-summary { background: #1a2640; border: 1px solid #2a3f5f; border-radius: 8px; padding: 16px; margin-top: 16px; }
+.diag-summary .highlight { font-weight: 700; font-size: 16px; }
+.chart-compare-box { height: 220px; position: relative; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="nav" style="background:#1b2838;border-bottom:1px solid #2a3f5f;padding:14px 32px;display:flex;align-items:center;justify-content:space-between">
+  <div style="font-size:16px;font-weight:600;color:#7ec8e3;letter-spacing:1px">Motion Capture Lab</div>
+  <div style="font-size:13px">
+    <a href="/" style="color:#8899aa;text-decoration:none;margin-left:24px">首页</a>
+    <a href="/case2/dashboard" style="color:#7ec8e3;text-decoration:none;margin-left:24px;font-weight:600">案例2</a>
+    <a href="/case4/dashboard" style="color:#8899aa;text-decoration:none;margin-left:24px">案例4</a>
+    <a href="/case4/network" style="color:#8899aa;text-decoration:none;margin-left:24px">核心网</a>
+  </div>
+</div>
+<div class="header">AI 动作质量评分系统 — 案例2 <a href="/" style="font-size:13px;color:#7ec8e3;text-decoration:none;margin-left:12px;font-weight:400">返回首页</a></div>
+<div class="container">
+  <div class="card">
+    <h3 style="margin-bottom:16px">上传动作数据</h3>
+    <form id="uploadForm" class="upload-row">
+      <div class="field">
+        <label>标准动作 CSV</label>
+        <input type="file" id="stdCsv" accept=".csv" required>
+      </div>
+      <div class="field">
+        <label>学生动作 CSV</label>
+        <input type="file" id="stuCsv" accept=".csv" required>
+      </div>
+      <div class="field">
+        <label>学生ID</label>
+        <input type="text" id="studentId" value="S001" style="width:80px">
+      </div>
+      <div class="field">
+        <label>动作类型</label>
+        <select id="actionType">
+          <option value="aerobics">健美操</option>
+          <option value="basketball_shot">篮球投篮</option>
+          <option value="gymnastics">体操</option>
+          <option value="dance">舞蹈</option>
+          <option value="rehab">康复训练</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" id="btnScore">开始评分</button>
+    </form>
+  </div>
+
+  <div id="loading"><p>处理中...</p></div>
+
+  <div id="resultSection" class="hidden">
+    <div class="card">
+      <div class="result-grid">
+        <div>
+          <div class="score-big" id="totalScore">--</div>
+          <div class="score-label">综合评分</div>
+          <div class="scores-list">
+            <div class="score-item"><div class="label">ROM 动作幅度</div><div class="val" id="romScore">--</div></div>
+            <div class="score-item"><div class="label">DTW 节奏一致性</div><div class="val" id="dtwScore">--</div></div>
+            <div class="score-item"><div class="label">对称性</div><div class="val" id="symScore">--</div></div>
+            <div class="score-item"><div class="label">RMSE 关节误差</div><div class="val" id="rmseScore">--</div></div>
+          </div>
+        </div>
+        <div class="chart-box">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:8px">偏差关节</h3>
+      <table class="error-table">
+        <thead><tr><th>关节</th><th>偏差角度</th><th>帧位置</th><th>等级</th></tr></thead>
+        <tbody id="errorBody"></tbody>
+      </table>
+      <div class="latency" id="latencyInfo"></div>
+      <button class="btn btn-download" id="btnReport" onclick="downloadReport()">下载 PDF 报告</button>
+    </div>
+  </div>
+
+  <!-- Fault Diagnosis Section -->
+  <div id="faultSection" class="hidden">
+    <div class="card">
+      <h3 style="margin-bottom:12px">故障诊断 — 注入故障 + 前后对比</h3>
+      <form id="faultForm" class="upload-row">
+        <div class="field">
+          <label>故障类型</label>
+          <select id="faultType">
+            <option value="marker_occlusion">标记点遮挡（右前臂30帧）</option>
+            <option value="binding_error">骨骼绑定偏差（左肩偏移）</option>
+            <option value="network_delay">网络延迟（采样率降50fps）</option>
+            <option value="score_drift">评分漂移（右肘坐标异常）</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-danger" id="btnFault">注入故障并诊断</button>
+      </form>
+    </div>
+
+    <div id="diagResultSection" class="hidden">
+      <div class="card">
+        <h3 style="margin-bottom:8px">诊断结果：<span id="faultDesc" style="color:#c62828"></span></h3>
+        <div class="diag-grid">
+          <div class="diag-col normal">
+            <div class="diag-title">正常评分</div>
+            <div class="diag-score" id="diagNormalScore">--</div>
+            <div class="diag-detail">
+              <div><span>ROM:</span> <b id="diagNormalRom">--</b></div>
+              <div><span>DTW:</span> <b id="diagNormalDtw">--</b></div>
+              <div><span>对称性:</span> <b id="diagNormalSym">--</b></div>
+              <div><span>RMSE:</span> <b id="diagNormalRmse">--</b></div>
+            </div>
+          </div>
+          <div class="diag-col faulty">
+            <div class="diag-title">故障后评分</div>
+            <div class="diag-score" id="diagFaultyScore">--</div>
+            <div class="diag-detail">
+              <div><span>ROM:</span> <b id="diagFaultyRom">--</b></div>
+              <div><span>DTW:</span> <b id="diagFaultyDtw">--</b></div>
+              <div><span>对称性:</span> <b id="diagFaultySym">--</b></div>
+              <div><span>RMSE:</span> <b id="diagFaultyRmse">--</b></div>
+            </div>
+          </div>
+          <div class="diag-col optimized">
+            <div class="diag-title">优化后评分</div>
+            <div class="diag-score" id="diagOptScore">--</div>
+            <div class="diag-detail">
+              <div><span>ROM:</span> <b id="diagOptRom">--</b></div>
+              <div><span>DTW:</span> <b id="diagOptDtw">--</b></div>
+              <div><span>对称性:</span> <b id="diagOptSym">--</b></div>
+              <div><span>RMSE:</span> <b id="diagOptRmse">--</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="diag-summary">
+          <div>故障导致评分下降 <span class="highlight" id="diagDrop" style="color:#c62828">--</span> 分</div>
+          <div>优化方法：<span id="diagMethod">--</span></div>
+          <div>优化后恢复 <span class="highlight" id="diagRecovery" style="color:#1565c0">--</span> 分（恢复率 <span class="highlight" id="diagRecoveryPct">--</span>%）</div>
+          <div style="margin-top:8px;font-size:13px;color:#888">
+            偏差关节变化：
+            <span id="diagErrorsNormal" style="color:#2e7d32"></span> →
+            <span id="diagErrorsFaulty" style="color:#c62828"></span> →
+            <span id="diagErrorsOpt" style="color:#1565c0"></span>
+          </div>
+        </div>
+        <div class="chart-compare-box">
+          <canvas id="diagChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentTaskId = '';
+let radarChart = null;
+let diagChart = null;
+
+document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('btnScore');
+  btn.disabled = true;
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('resultSection').classList.add('hidden');
+  document.getElementById('faultSection').classList.add('hidden');
+
+  const fd = new FormData();
+  fd.append('standard_csv', document.getElementById('stdCsv').files[0]);
+  fd.append('student_csv', document.getElementById('stuCsv').files[0]);
+  fd.append('student_id', document.getElementById('studentId').value);
+  fd.append('action_type', document.getElementById('actionType').value);
+
+  try {
+    const resp = await fetch('/case2/upload_motion', { method: 'POST', body: fd });
+    const data = await resp.json();
+    currentTaskId = data.task_id;
+    showResult(data);
+    document.getElementById('faultSection').classList.remove('hidden');
+  } catch (err) {
+    alert('Error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    document.getElementById('loading').style.display = 'none';
+  }
+});
+
+document.getElementById('faultForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('btnFault');
+  btn.disabled = true;
+  document.getElementById('loading').style.display = 'block';
+
+  const fd = new FormData();
+  fd.append('standard_csv', document.getElementById('stdCsv').files[0]);
+  fd.append('student_csv', document.getElementById('stuCsv').files[0]);
+  fd.append('fault_type', document.getElementById('faultType').value);
+  fd.append('student_id', document.getElementById('studentId').value);
+  fd.append('action_type', document.getElementById('actionType').value);
+
+  try {
+    const resp = await fetch('/case2/fault_diagnosis', { method: 'POST', body: fd });
+    const data = await resp.json();
+    showDiagnosis(data);
+  } catch (err) {
+    alert('Error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    document.getElementById('loading').style.display = 'none';
+  }
+});
+
+function showResult(data) {
+  document.getElementById('totalScore').textContent = data.total_score;
+  document.getElementById('romScore').textContent = data.rom_score;
+  document.getElementById('dtwScore').textContent = data.dtw_score;
+  document.getElementById('symScore').textContent = data.symmetry_score;
+  document.getElementById('rmseScore').textContent = data.rmse_score;
+  document.getElementById('latencyInfo').textContent = '端到端延迟: ' + data.latency_ms + ' ms';
+
+  const tbody = document.getElementById('errorBody');
+  tbody.innerHTML = '';
+  (data.error_joints || []).forEach(ej => {
+    const tr = document.createElement('tr');
+    const cls = ej.level === 'red' ? 'badge-red' : ej.level === 'yellow' ? 'badge-yellow' : 'badge-green';
+    const txt = ej.level === 'red' ? '严重' : ej.level === 'yellow' ? '注意' : '正常';
+    tr.innerHTML = `<td>${ej.joint}</td><td>${ej.error_degree}°</td><td>#${ej.frame}</td><td><span class="badge ${cls}">${txt}</span></td>`;
+    tbody.appendChild(tr);
+  });
+
+  drawRadar(data);
+  document.getElementById('resultSection').classList.remove('hidden');
+}
+
+function showDiagnosis(d) {
+  document.getElementById('faultDesc').textContent = d.fault_description;
+
+  document.getElementById('diagNormalScore').textContent = d.normal_score;
+  document.getElementById('diagNormalRom').textContent = d.normal_detail.rom;
+  document.getElementById('diagNormalDtw').textContent = d.normal_detail.dtw;
+  document.getElementById('diagNormalSym').textContent = d.normal_detail.symmetry;
+  document.getElementById('diagNormalRmse').textContent = d.normal_detail.rmse;
+
+  document.getElementById('diagFaultyScore').textContent = d.faulty_score;
+  document.getElementById('diagFaultyRom').textContent = d.faulty_detail.rom;
+  document.getElementById('diagFaultyDtw').textContent = d.faulty_detail.dtw;
+  document.getElementById('diagFaultySym').textContent = d.faulty_detail.symmetry;
+  document.getElementById('diagFaultyRmse').textContent = d.faulty_detail.rmse;
+
+  document.getElementById('diagOptScore').textContent = d.optimized_score;
+  document.getElementById('diagOptRom').textContent = d.optimized_detail.rom;
+  document.getElementById('diagOptDtw').textContent = d.optimized_detail.dtw;
+  document.getElementById('diagOptSym').textContent = d.optimized_detail.symmetry;
+  document.getElementById('diagOptRmse').textContent = d.optimized_detail.rmse;
+
+  document.getElementById('diagDrop').textContent = d.score_drop;
+  document.getElementById('diagMethod').textContent = d.optimization_method;
+  document.getElementById('diagRecovery').textContent = d.score_recovery;
+  document.getElementById('diagRecoveryPct').textContent = d.recovery_pct;
+
+  document.getElementById('diagErrorsNormal').textContent = (d.normal_error_joints || []).length + '个偏差';
+  document.getElementById('diagErrorsFaulty').textContent = (d.faulty_error_joints || []).length + '个偏差';
+  document.getElementById('diagErrorsOpt').textContent = (d.optimized_error_joints || []).length + '个偏差';
+
+  drawDiagChart(d);
+  document.getElementById('diagResultSection').classList.remove('hidden');
+}
+
+function drawRadar(data) {
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  if (radarChart) radarChart.destroy();
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['ROM', 'DTW', 'Symmetry', 'RMSE'],
+      datasets: [{
+        label: 'Score',
+        data: [data.rom_score, data.dtw_score, data.symmetry_score, data.rmse_score],
+        backgroundColor: 'rgba(68,114,196,0.2)',
+        borderColor: '#4472C4',
+        pointBackgroundColor: '#4472C4',
+      }]
+    },
+    options: {
+      scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+function drawDiagChart(d) {
+  const ctx = document.getElementById('diagChart').getContext('2d');
+  if (diagChart) diagChart.destroy();
+  diagChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['ROM', 'DTW', 'Symmetry', 'RMSE', 'Total'],
+      datasets: [
+        { label: '正常', data: [d.normal_detail.rom, d.normal_detail.dtw, d.normal_detail.symmetry, d.normal_detail.rmse, d.normal_score],
+          backgroundColor: 'rgba(46,125,50,0.7)' },
+        { label: '故障后', data: [d.faulty_detail.rom, d.faulty_detail.dtw, d.faulty_detail.symmetry, d.faulty_detail.rmse, d.faulty_score],
+          backgroundColor: 'rgba(198,40,40,0.7)' },
+        { label: '优化后', data: [d.optimized_detail.rom, d.optimized_detail.dtw, d.optimized_detail.symmetry, d.optimized_detail.rmse, d.optimized_score],
+          backgroundColor: 'rgba(21,101,192,0.7)' },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true, max: 100 } },
+      plugins: { legend: { position: 'top' } }
+    }
+  });
+}
+
+function downloadReport() {
+  if (currentTaskId) window.open('/case2/report/' + currentTaskId, '_blank');
+}
+</script>
+</body>
+</html>
