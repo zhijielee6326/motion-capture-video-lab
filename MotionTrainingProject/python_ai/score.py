@@ -9,7 +9,8 @@ WEIGHTS = {"rom": 0.25, "dtw": 0.25, "symmetry": 0.20, "rmse": 0.30}
 
 ACTION_WEIGHTS = {
     "aerobics":        {"rom": 0.30, "dtw": 0.25, "symmetry": 0.15, "rmse": 0.30},
-    "basketball_shot": {"rom": 0.20, "dtw": 0.20, "symmetry": 0.15, "rmse": 0.45},
+    "basketball_dribble": {"rom": 0.20, "dtw": 0.20, "symmetry": 0.15, "rmse": 0.45},
+    "basketball_shot":   {"rom": 0.20, "dtw": 0.20, "symmetry": 0.15, "rmse": 0.45},
     "gymnastics":      {"rom": 0.35, "dtw": 0.25, "symmetry": 0.20, "rmse": 0.20},
     "dance":           {"rom": 0.30, "dtw": 0.30, "symmetry": 0.20, "rmse": 0.20},
     "rehab":           {"rom": 0.20, "dtw": 0.25, "symmetry": 0.30, "rmse": 0.25},

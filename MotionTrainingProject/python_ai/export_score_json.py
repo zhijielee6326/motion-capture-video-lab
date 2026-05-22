@@ -146,7 +146,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", "-o", help="Output JSON path")
     parser.add_argument("--student-id", default="S001")
     parser.add_argument("--action-type", default="unknown",
-                        choices=["aerobics", "basketball_shot", "gymnastics", "dance", "rehab", "unknown"])
+                        choices=["aerobics", "basketball_dribble", "basketball_shot", "gymnastics", "dance", "rehab", "unknown"])
     args = parser.parse_args()
 
     out = args.output or args.student_csv.replace(".csv", "_ue5_score.json")
