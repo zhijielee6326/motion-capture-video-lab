@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI动作质量评分系统</title>
 <script src="/static/chart.min.js"></script>
+<script src="https://unpkg.com/three@0.160/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.160/examples/js/controls/OrbitControls.js"></script>
+<script src="/static/case2_3d.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; color: #e0e0e0; }
@@ -45,6 +48,14 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
 .deduction-item .dim-reason { font-size: 13px; color: #bcc; margin-top: 4px; }
 .deduction-item .dim-suggest { font-size: 13px; color: #7ec8e3; margin-top: 4px; }
 .suggestion-item { font-size: 14px; line-height: 1.8; color: #e0e0e0; }
+
+.playback-controls { display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+.btn-play { padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; background: #4472C4; color: #fff; }
+.btn-play:hover { background: #3a64b0; }
+#progressSlider { flex: 1; min-width: 120px; accent-color: #4472C4; }
+#speedSelect { padding: 6px 10px; background: #0d1b2a; color: #e0e0e0; border: 1px solid #2a3f5f; border-radius: 4px; font-size: 13px; }
+#frameInfo { font-size: 13px; color: #8899aa; white-space: nowrap; }
+#threejs-container { border-radius: 8px; overflow: hidden; background: #0d1b2a; }
 
 /* Fault diagnosis styles */
 .diag-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; }
@@ -150,6 +161,21 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
 
     <div class="card">
       <button class="btn btn-download" id="btnReport" onclick="downloadReport()">下载 PDF 评估报告</button>
+    </div>
+
+    <div id="skeleton3dSection" class="card hidden">
+      <h3 style="margin-bottom:8px">3D 骨架动画对比回放</h3>
+      <div id="threejs-container" style="height:420px;"></div>
+      <div class="playback-controls">
+        <button class="btn-play" id="btn3dPlay" onclick="toggle3dPlay()">▶ 播放</button>
+        <input type="range" id="progressSlider" min="0" max="100" value="0" oninput="on3dSeek(this.value)">
+        <select id="speedSelect" onchange="Skeleton3D.setSpeed(parseFloat(this.value))">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1.0x</option>
+          <option value="2">2.0x</option>
+        </select>
+        <span id="frameInfo">帧 0 / 0</span>
+      </div>
     </div>
   </div>
 
@@ -355,6 +381,8 @@ function showResult(data) {
 
   drawRadar(data);
   document.getElementById('resultSection').classList.remove('hidden');
+
+  loadSkeletonData(data.task_id);
 }
 
 function showDiagnosis(d) {
@@ -439,6 +467,57 @@ function drawDiagChart(d) {
 
 function downloadReport() {
   if (currentTaskId) window.open('/case2/report/' + currentTaskId, '_blank');
+}
+
+// ── 3D Skeleton Playback ──
+var skeleton3dReady = false;
+
+function loadSkeletonData(taskId) {
+  fetch('/case2/skeleton_data/' + taskId).then(function(r) { return r.json(); }).then(function(data) {
+    if (!skeleton3dReady) {
+      Skeleton3D.init('threejs-container');
+      skeleton3dReady = true;
+    }
+    Skeleton3D.loadData(data);
+    var slider = document.getElementById('progressSlider');
+    slider.max = data.frame_count - 1;
+    slider.value = 0;
+    updateFrameInfo(0, data.frame_count);
+    document.getElementById('skeleton3dSection').classList.remove('hidden');
+
+    window.on3dFrameChange = function(f) {
+      slider.value = f;
+      updateFrameInfo(f, data.frame_count);
+    };
+    window.on3dPlaybackEnd = function() {
+      document.getElementById('btn3dPlay').textContent = '▶ 播放';
+    };
+  }).catch(function(err) {
+    console.warn('3D skeleton data unavailable:', err);
+  });
+}
+
+function updateFrameInfo(f, total) {
+  document.getElementById('frameInfo').textContent = '帧 ' + f + ' / ' + total;
+}
+
+function toggle3dPlay() {
+  var btn = document.getElementById('btn3dPlay');
+  if (Skeleton3D.isPlaying()) {
+    Skeleton3D.pause();
+    btn.textContent = '▶ 播放';
+  } else {
+    if (Skeleton3D.getCurrentFrame() >= Skeleton3D.getFrameCount() - 1) {
+      Skeleton3D.seekTo(0);
+    }
+    Skeleton3D.play();
+    btn.textContent = '⏸ 暂停';
+  }
+}
+
+function on3dSeek(val) {
+  Skeleton3D.seekTo(parseInt(val));
+  updateFrameInfo(parseInt(val), Skeleton3D.getFrameCount());
 }
 </script>
 </body>

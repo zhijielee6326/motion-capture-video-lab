@@ -11,7 +11,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from python_ai.read_csv import read_csv, check_csv
+from python_ai.read_csv import read_csv, check_csv, get_joint_coords, JOINT_NAMES
 from python_ai.preprocess import preprocess, interpolate_missing, gaussian_smooth, normalize_by_hips
 from python_ai.angle import compute_all_angles
 from python_ai.score import full_scoring, save_result
@@ -146,6 +146,98 @@ async def case2_check_csv(path: str):
         raise HTTPException(404, "File not found")
     df = read_csv(path)
     return check_csv(df)
+
+
+BONE_CONNECTIONS = [
+    ("Neck", "Head"), ("Spine1", "Neck"), ("Spine", "Spine1"), ("Hips", "Spine"),
+    ("Spine1", "LeftShoulder"), ("LeftShoulder", "LeftArm"), ("LeftArm", "LeftForeArm"), ("LeftForeArm", "LeftHand"),
+    ("Spine1", "RightShoulder"), ("RightShoulder", "RightArm"), ("RightArm", "RightForeArm"), ("RightForeArm", "RightHand"),
+    ("Hips", "LeftUpLeg"), ("LeftUpLeg", "LeftLeg"), ("LeftLeg", "LeftFoot"),
+    ("Hips", "RightUpLeg"), ("RightUpLeg", "RightLeg"), ("RightLeg", "RightFoot"),
+]
+
+SCORING_JOINTS = [
+    "Head", "Neck", "Spine", "Spine1", "Spine2", "Spine3", "Hips",
+    "LeftShoulder", "LeftArm", "LeftForeArm", "LeftHand",
+    "RightShoulder", "RightArm", "RightForeArm", "RightHand",
+    "LeftUpLeg", "LeftLeg", "LeftFoot", "LeftToeBase",
+    "RightUpLeg", "RightLeg", "RightFoot", "RightToeBase",
+]
+
+
+@app.get("/case2/skeleton_data/{task_id}")
+async def case2_skeleton_data(task_id: str):
+    json_path = os.path.join(REPORTS_DIR, task_id, "result.json")
+    if not os.path.exists(json_path):
+        raise HTTPException(404, f"Task {task_id} not found")
+
+    import json
+    with open(json_path, "r", encoding="utf-8") as f:
+        result = json.load(f)
+
+    std_clean = os.path.join(UPLOAD_DIR, f"{task_id}_std_clean.csv")
+    stu_clean = os.path.join(UPLOAD_DIR, f"{task_id}_stu_clean.csv")
+    if not os.path.exists(std_clean) or not os.path.exists(stu_clean):
+        raise HTTPException(404, "Clean CSV files not found")
+
+    std_df = read_csv(std_clean)
+    stu_df = read_csv(stu_clean)
+
+    available_joints = [j for j in SCORING_JOINTS
+                        if f"{j}_x" in std_df.columns and f"{j}_x" in stu_df.columns]
+
+    max_frames = max(len(std_df), len(stu_df))
+    target_fps = 30
+    dt = std_df["time"].diff().dropna()
+    orig_fps = round(1.0 / dt.mean(), 1) if len(dt) > 0 else 100
+    step = max(1, int(orig_fps / target_fps))
+
+    std_frames = []
+    stu_frames = []
+    for i in range(0, max_frames, step):
+        sf = []
+        ef = []
+        for j in available_joints:
+            if i < len(std_df):
+                sf.extend([float(std_df.iloc[i][f"{j}_x"]), float(std_df.iloc[i][f"{j}_y"]), float(std_df.iloc[i][f"{j}_z"])])
+            else:
+                sf.extend([0, 0, 0])
+            if i < len(stu_df):
+                ef.extend([float(stu_df.iloc[i][f"{j}_x"]), float(stu_df.iloc[i][f"{j}_y"]), float(stu_df.iloc[i][f"{j}_z"])])
+            else:
+                ef.extend([0, 0, 0])
+        std_frames.append(sf)
+        stu_frames.append(ef)
+
+    joint_idx = {j: i for i, j in enumerate(available_joints)}
+    bones = []
+    for a, b in BONE_CONNECTIONS:
+        if a in joint_idx and b in joint_idx:
+            bones.append([joint_idx[a], joint_idx[b]])
+
+    error_joints = result.get("error_joints", [])
+    joint_colors = []
+    error_joint_set = {ej["joint"] for ej in error_joints}
+    for j in available_joints:
+        color = "default"
+        for ej in error_joints:
+            if ej["joint"] == j:
+                color = ej["level"]
+                break
+        joint_colors.append({"joint": j, "joint_cn": result.get("joint_cn", {}), "color": color})
+
+    return {
+        "fps": target_fps,
+        "frame_count": len(std_frames),
+        "joint_names": available_joints,
+        "std_frames": std_frames,
+        "stu_frames": stu_frames,
+        "bone_connections": bones,
+        "joint_colors": joint_colors,
+        "error_joints": error_joints,
+        "total_score": result.get("total_score", 0),
+        "grade": result.get("grade", {}),
+    }
 
 
 def _inject_fault_on_df(df: pd.DataFrame, fault_type: str) -> pd.DataFrame:
