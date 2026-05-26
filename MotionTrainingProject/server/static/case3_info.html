@@ -49,6 +49,12 @@ body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;backgroun
 .script-box .action{color:#4472C4;font-style:italic}
 .script-box del{color:#555;text-decoration:line-through}
 .footer{text-align:center;padding:32px;font-size:12px;color:#445;border-top:1px solid #1b2838;margin-top:24px}
+
+.arch-node{display:inline-block;width:110px;text-align:center;border:2px solid;border-radius:10px;padding:12px 8px;vertical-align:top}
+.arch-icon{font-size:24px;margin-bottom:4px}
+.arch-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
+.arch-desc{font-size:11px;color:#8899aa;line-height:1.4}
+.arch-arrow{font-size:20px;width:50px;text-align:center;display:inline-block;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -76,14 +82,74 @@ body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;backgroun
   <!-- System Architecture -->
   <div class="section">
     <h2>系统架构</h2>
-    <div class="flow-box">
-<span class="label">演员（动捕服）</span>
-  <span class="arrow">→ FZMotion 光学摄像头</span>
-  <span class="arrow">→ Motive（骨骼跟踪）</span>
-  <span class="arrow">→ MotionBuilder（角色绑定 + 角色化）</span>
-  <span class="arrow">→ LiveLink（实时数据流）</span>
-  <span class="arrow">→ UE5（虚拟演播场景 + 数字人 + 机位控制）</span>
-  <span class="arrow">→ 屏幕共享/推流 → 远程观看端</span>
+    <div style="background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;padding:28px;overflow-x:auto">
+      <div style="display:flex;margin-bottom:8px">
+        <div style="width:110px;font-size:11px;color:#27ae60;font-weight:600;text-align:center">采集层</div>
+        <div style="width:50px"></div>
+        <div style="width:110px;font-size:11px;color:#4472C4;font-weight:600;text-align:center">处理层</div>
+        <div style="width:50px"></div>
+        <div style="width:110px;font-size:11px;color:#4472C4;font-weight:600;text-align:center">绑定层</div>
+        <div style="width:50px"></div>
+        <div style="width:110px;font-size:11px;color:#e67e22;font-weight:600;text-align:center">传输层</div>
+        <div style="width:50px"></div>
+        <div style="width:110px;font-size:11px;color:#7ec8e3;font-weight:600;text-align:center">渲染层</div>
+        <div style="width:50px"></div>
+        <div style="width:110px;font-size:11px;color:#9b59b6;font-weight:600;text-align:center">输出层</div>
+      </div>
+      <div style="display:flex;align-items:center;flex-wrap:nowrap">
+        <div class="arch-node" style="background:#1a3a2a;border-color:#27ae60">
+          <div class="arch-icon">&#x1F9B8;</div>
+          <div class="arch-title">演员</div>
+          <div class="arch-desc">动捕服<br>反光标记点</div>
+        </div>
+        <div class="arch-arrow" style="color:#27ae60">&#x25B6;</div>
+        <div class="arch-node" style="background:#1a2a3a;border-color:#4472C4">
+          <div class="arch-icon">&#x1F4F7;</div>
+          <div class="arch-title">FZMotion</div>
+          <div class="arch-desc">Swift30红外<br>相机阵列</div>
+        </div>
+        <div class="arch-arrow" style="color:#4472C4">&#x25B6;</div>
+        <div class="arch-node" style="background:#1a2a3a;border-color:#4472C4">
+          <div class="arch-icon">&#x2699;</div>
+          <div class="arch-title">Motive</div>
+          <div class="arch-desc">标定+T-Pose<br>骨骼跟踪</div>
+        </div>
+        <div class="arch-arrow" style="color:#7ec8e3">&#x25B6;</div>
+        <div class="arch-node" style="background:#2a1a3a;border-color:#9b59b6">
+          <div class="arch-icon">&#x1F3AC;</div>
+          <div class="arch-title">MotionBuilder</div>
+          <div class="arch-desc">角色绑定<br>Characterize</div>
+        </div>
+        <div class="arch-arrow" style="color:#9b59b6">&#x25B6;</div>
+        <div class="arch-node" style="background:#3a2a1a;border-color:#e67e22">
+          <div class="arch-icon">&#x26A1;</div>
+          <div class="arch-title">LiveLink</div>
+          <div class="arch-desc">实时数据流<br>骨骼驱动</div>
+        </div>
+        <div class="arch-arrow" style="color:#e67e22">&#x25B6;</div>
+        <div class="arch-node" style="background:#1a2a3a;border-color:#7ec8e3">
+          <div class="arch-icon">&#x1F3AE;</div>
+          <div class="arch-title">UE5</div>
+          <div class="arch-desc">舞台场景<br>数字人+机位</div>
+        </div>
+        <div class="arch-arrow" style="color:#7ec8e3">&#x25B6;</div>
+        <div class="arch-node" style="background:#2a1a2a;border-color:#9b59b6">
+          <div class="arch-icon">&#x1F4FA;</div>
+          <div class="arch-title">远程观看</div>
+          <div class="arch-desc">屏幕共享<br>推流输出</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:16px;flex-wrap:wrap">
+        <div style="background:#1a2640;border:1px solid #2a3f5f;border-radius:6px;padding:8px 14px;font-size:12px;color:#e0e0e0">
+          <b style="color:#e67e22">多机位切换</b><br><span style="color:#8899aa">按键1全景 / 按键2特写</span>
+        </div>
+        <div style="background:#1a2640;border:1px solid #2a3f5f;border-radius:6px;padding:8px 14px;font-size:12px;color:#e0e0e0">
+          <b style="color:#9b59b6">AI脚本</b><br><span style="color:#8899aa">AI生成 &#x2192; 人工修订 &#x2192; 执行</span>
+        </div>
+        <div style="background:#1a2640;border:1px solid #2a3f5f;border-radius:6px;padding:8px 14px;font-size:12px;color:#e0e0e0">
+          <b style="color:#27ae60">已有场景</b><br><span style="color:#8899aa">女生舞台虚拟场景 + 健美操FBX</span>
+        </div>
+      </div>
     </div>
 
     <div class="grid3">

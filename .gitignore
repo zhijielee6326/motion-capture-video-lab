@@ -1,3 +1,17 @@
 __pycache__/
 *.pyc
 .claude/
+.venv/
+.venv311/
+*.egg-info/
+
+# Generated data
+MotionTrainingProject/data/reports/*/
+MotionTrainingProject/server/static/uploads/
+MotionTrainingProject/server/static/annotated_videos/
+MotionTrainingProject/logs/
+MotionTrainingProject/test_video.mp4
+
+# Unused model files
+MotionTrainingProject/weights/yolov8n-pose-fixed.onnx
+MotionTrainingProject/weights/pose_deploy_linevec_faster.prototxt

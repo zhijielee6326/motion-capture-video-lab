@@ -52,6 +52,16 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
 @media (max-width: 800px) {
   .container { grid-template-columns: 1fr; }
 }
+
+.arch-node{display:inline-block;width:100px;text-align:center;border:2px solid;border-radius:10px;padding:10px 6px;vertical-align:top}
+.arch-icon{font-size:22px;margin-bottom:4px}
+.arch-title{font-size:12px;font-weight:700;color:#fff;margin-bottom:4px}
+.arch-desc{font-size:10px;color:#8899aa;line-height:1.4}
+.arch-arrow{font-size:18px;width:40px;text-align:center;display:inline-block;vertical-align:middle}
+.arch-toggle{cursor:pointer;color:#4472C4;font-size:13px;user-select:none;padding:4px 0}
+.arch-toggle:hover{color:#7ec8e3}
+.arch-content{display:none;margin-top:12px}
+.arch-content.open{display:block}
 </style>
 </head>
 <body>
@@ -74,6 +84,102 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
 </div>
 
 <div class="container">
+  <div class="card" style="padding:16px 24px">
+    <div class="arch-toggle" onclick="this.nextElementSibling.classList.toggle('open')">&#x25B6; 系统架构图（点击展开）</div>
+    <div class="arch-content">
+      <div style="background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;padding:24px;overflow-x:auto">
+        <!-- Row 1: Real-time pipeline (top) -->
+        <div style="font-size:11px;color:#4472C4;font-weight:600;margin-bottom:8px">实时驱动链路</div>
+        <div style="display:flex;align-items:center;flex-wrap:nowrap;margin-bottom:16px">
+          <div class="arch-node" style="background:#1a3a2a;border-color:#27ae60">
+            <div class="arch-icon">&#x1F9B8;</div>
+            <div class="arch-title">演员</div>
+            <div class="arch-desc">动捕服<br>标记点</div>
+          </div>
+          <div class="arch-arrow" style="color:#27ae60">&#x25B6;</div>
+          <div class="arch-node" style="background:#1a2a3a;border-color:#4472C4">
+            <div class="arch-icon">&#x1F4F7;</div>
+            <div class="arch-title">FZMotion</div>
+            <div class="arch-desc">光学相机<br>阵列</div>
+          </div>
+          <div class="arch-arrow" style="color:#4472C4">&#x25B6;</div>
+          <div class="arch-node" style="background:#1a2a3a;border-color:#4472C4">
+            <div class="arch-icon">&#x2699;</div>
+            <div class="arch-title">Motive</div>
+            <div class="arch-desc">骨骼<br>跟踪</div>
+          </div>
+          <div class="arch-arrow" style="color:#7ec8e3">&#x25B6;</div>
+          <div class="arch-node" style="background:#2a1a3a;border-color:#9b59b6">
+            <div class="arch-icon">&#x1F3AC;</div>
+            <div class="arch-title">MB</div>
+            <div class="arch-desc">角色<br>绑定</div>
+          </div>
+          <div class="arch-arrow" style="color:#9b59b6">&#x25B6;</div>
+          <div class="arch-node" style="background:#3a2a1a;border-color:#e67e22">
+            <div class="arch-icon">&#x26A1;</div>
+            <div class="arch-title">LiveLink</div>
+            <div class="arch-desc">实时<br>数据流</div>
+          </div>
+          <div class="arch-arrow" style="color:#e67e22">&#x25B6;</div>
+          <div class="arch-node" style="background:#1a2a3a;border-color:#7ec8e3;width:140px">
+            <div class="arch-icon">&#x1F3AE;</div>
+            <div class="arch-title">UE5 灾害场景</div>
+            <div class="arch-desc">数字抢修人员<br>UMG状态面板</div>
+          </div>
+        </div>
+        <!-- Row 2: Python backend + Browser (bottom) -->
+        <div style="border-top:1px solid #2a3f5f;padding-top:12px">
+          <div style="font-size:11px;color:#e67e22;font-weight:600;margin-bottom:8px">AI评价 & 核心网联动</div>
+          <div style="display:flex;align-items:center;gap:40px;flex-wrap:wrap">
+            <!-- Left: Python Backend -->
+            <div style="display:flex;align-items:center;flex-wrap:nowrap">
+              <div class="arch-node" style="background:#1a2a3a;border-color:#4472C4;width:120px">
+                <div class="arch-icon">&#x1F4C1;</div>
+                <div class="arch-title">CSV数据上传</div>
+                <div class="arch-desc">抢修动作<br>骨骼坐标</div>
+              </div>
+              <div class="arch-arrow" style="color:#4472C4">&#x25B6;</div>
+              <div class="arch-node" style="background:#3a2a1a;border-color:#e67e22;width:140px">
+                <div class="arch-icon">&#x1F916;</div>
+                <div class="arch-title">Python FastAPI</div>
+                <div class="arch-desc">动作识别+AI评分<br>核心网状态管理</div>
+              </div>
+              <div class="arch-arrow" style="color:#e67e22">&#x25B6;</div>
+              <div class="arch-node" style="background:#2a1a2a;border-color:#9b59b6;width:120px">
+                <div class="arch-icon">&#x1F4C4;</div>
+                <div class="arch-title">演练报告</div>
+                <div class="arch-desc">PDF评分报告<br>改进建议</div>
+              </div>
+            </div>
+            <!-- Right: Browser -->
+            <div style="display:flex;align-items:center;flex-wrap:nowrap">
+              <div class="arch-node" style="background:#1a2a3a;border-color:#7ec8e3;width:120px">
+                <div class="arch-icon">&#x1F310;</div>
+                <div class="arch-title">浏览器</div>
+                <div class="arch-desc">核心网状态页<br>实时轮询2s</div>
+              </div>
+              <div class="arch-arrow" style="color:#7ec8e3">&#x25C0;&#x25B6;</div>
+              <div class="arch-node" style="background:#1a2a3a;border-color:#4472C4;width:120px">
+                <div class="arch-icon">&#x1F4CA;</div>
+                <div class="arch-title">Dashboard</div>
+                <div class="arch-desc">动作进度<br>AI评分面板</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Bottom info tags -->
+        <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+          <div style="background:#1a2640;border:1px solid #2a3f5f;border-radius:6px;padding:6px 12px;font-size:11px;color:#e0e0e0">
+            <b style="color:#c0392b">动作映射</b> S1拿&#x2192;S2走&#x2192;S3放&#x2192;S4接线&#x2192;S5天线&#x2192;S6检查&#x2192;S7汇报&#x2192;S8确认
+          </div>
+          <div style="background:#1a2640;border:1px solid #2a3f5f;border-radius:6px;padding:6px 12px;font-size:11px;color:#e0e0e0">
+            <b style="color:#27ae60">核心网恢复</b> 终端接入 &#x2192; 用户注册 &#x2192; 会话建立 &#x2192; 视频回传
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="left-col">
     <div class="card">
       <h3>数据上传</h3>
@@ -82,6 +188,7 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
         <input type="file" id="motionCsv" accept=".csv">
         <br><br>
         <button class="btn btn-primary" id="btnAnalyze" onclick="analyze()">开始分析</button>
+        <button class="btn" style="background:#e67e22;color:#fff;margin-left:12px" onclick="demoEvaluate()">一键演示（抢修数据）</button>
       </div>
     </div>
 
@@ -133,6 +240,21 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
 
 <script>
 let radarChart = null;
+
+async function demoEvaluate() {
+  document.getElementById('btnAnalyze').disabled = true;
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('resultSection').classList.add('hidden');
+  try {
+    const resp = await fetch('/case4/demo_evaluate', { method: 'POST' });
+    const data = await resp.json();
+    showResult(data);
+  } catch(e) { alert('Error: ' + e.message); }
+  finally {
+    document.getElementById('btnAnalyze').disabled = false;
+    document.getElementById('loading').style.display = 'none';
+  }
+}
 
 async function analyze() {
   const file = document.getElementById('motionCsv').files[0];

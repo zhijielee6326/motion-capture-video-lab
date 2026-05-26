@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>AI动作质量评分系统</title>
 <script src="/static/chart.min.js"></script>
-<script src="https://unpkg.com/three@0.160/build/three.min.js"></script>
-<script src="https://unpkg.com/three@0.160/examples/js/controls/OrbitControls.js"></script>
+<script src="/static/three.min.js"></script>
+<script src="/static/OrbitControls.js"></script>
 <script src="/static/case2_3d.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -74,6 +75,16 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
 .diag-summary { background: #1a2640; border: 1px solid #2a3f5f; border-radius: 8px; padding: 16px; margin-top: 16px; }
 .diag-summary .highlight { font-weight: 700; font-size: 16px; }
 .chart-compare-box { height: 220px; position: relative; margin-top: 16px; }
+
+.arch-node{display:inline-block;width:110px;text-align:center;border:2px solid;border-radius:10px;padding:12px 8px;vertical-align:top}
+.arch-icon{font-size:24px;margin-bottom:4px}
+.arch-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
+.arch-desc{font-size:11px;color:#8899aa;line-height:1.4}
+.arch-arrow{font-size:20px;width:50px;text-align:center;display:inline-block;vertical-align:middle}
+.arch-toggle{cursor:pointer;color:#4472C4;font-size:13px;user-select:none;padding:4px 0}
+.arch-toggle:hover{color:#7ec8e3}
+.arch-content{display:none;margin-top:12px}
+.arch-content.open{display:block}
 </style>
 </head>
 <body>
@@ -88,8 +99,78 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
 </div>
 <div class="header">AI 动作质量评分系统 — 案例2 <a href="/" style="font-size:13px;color:#7ec8e3;text-decoration:none;margin-left:12px;font-weight:400">返回首页</a></div>
 <div class="container">
+  <div class="card" style="padding:16px 24px">
+    <div class="arch-toggle" onclick="this.nextElementSibling.classList.toggle('open')">&#x25B6; 系统架构图（点击展开）</div>
+    <div class="arch-content">
+      <div style="background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;padding:24px;overflow-x:auto">
+        <div style="display:flex;margin-bottom:8px">
+          <div style="width:110px;font-size:11px;color:#27ae60;font-weight:600;text-align:center">采集层</div>
+          <div style="width:50px"></div>
+          <div style="width:110px;font-size:11px;color:#4472C4;font-weight:600;text-align:center">数据层</div>
+          <div style="width:50px"></div>
+          <div style="width:110px;font-size:11px;color:#e67e22;font-weight:600;text-align:center">AI评分层</div>
+          <div style="width:50px"></div>
+          <div style="width:110px;font-size:11px;color:#c0392b;font-weight:600;text-align:center">诊断层</div>
+          <div style="width:50px"></div>
+          <div style="width:110px;font-size:11px;color:#9b59b6;font-weight:600;text-align:center">输出层</div>
+        </div>
+        <div style="display:flex;align-items:center;flex-wrap:nowrap">
+          <div class="arch-node" style="background:#1a3a2a;border-color:#27ae60">
+            <div class="arch-icon">&#x1F4F7;</div>
+            <div class="arch-title">FZMotion</div>
+            <div class="arch-desc">Motive导出<br>骨骼CSV</div>
+          </div>
+          <div class="arch-arrow" style="color:#27ae60">&#x25B6;</div>
+          <div class="arch-node" style="background:#1a2a3a;border-color:#4472C4">
+            <div class="arch-icon">&#x1F4C1;</div>
+            <div class="arch-title">数据预处理</div>
+            <div class="arch-desc">缺帧插补<br>坐标归一化</div>
+          </div>
+          <div class="arch-arrow" style="color:#4472C4">&#x25B6;</div>
+          <div class="arch-node" style="background:#1a2a3a;border-color:#4472C4">
+            <div class="arch-icon">&#x1F4CA;</div>
+            <div class="arch-title">角度计算</div>
+            <div class="arch-desc">关节角度<br>时间序列</div>
+          </div>
+          <div class="arch-arrow" style="color:#7ec8e3">&#x25B6;</div>
+          <div class="arch-node" style="background:#3a2a1a;border-color:#e67e22">
+            <div class="arch-icon">&#x1F916;</div>
+            <div class="arch-title">AI评分</div>
+            <div class="arch-desc">ROM+DTW<br>对称+RMSE</div>
+          </div>
+          <div class="arch-arrow" style="color:#e67e22">&#x25B6;</div>
+          <div class="arch-node" style="background:#331a1a;border-color:#c0392b">
+            <div class="arch-icon">&#x1F527;</div>
+            <div class="arch-title">故障诊断</div>
+            <div class="arch-desc">遮挡/偏移<br>优化对比</div>
+          </div>
+          <div class="arch-arrow" style="color:#c0392b">&#x25B6;</div>
+          <div class="arch-node" style="background:#2a1a2a;border-color:#9b59b6">
+            <div class="arch-icon">&#x1F4C4;</div>
+            <div class="arch-title">PDF报告</div>
+            <div class="arch-desc">雷达图<br>改进建议</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:16px;flex-wrap:wrap">
+          <div style="background:#1a2640;border:1px solid #2a3f5f;border-radius:6px;padding:8px 14px;font-size:12px;color:#e0e0e0">
+            <b style="color:#e67e22">四维评价</b><br><span style="color:#8899aa">ROM 25% + DTW 25% + 对称性 20% + RMSE 30%</span>
+          </div>
+          <div style="background:#1a2640;border:1px solid #2a3f5f;border-radius:6px;padding:8px 14px;font-size:12px;color:#e0e0e0">
+            <b style="color:#27ae60">运动素材</b><br><span style="color:#8899aa">原地运球 CSV / FBX</span>
+          </div>
+          <div style="background:#1a2640;border:1px solid #2a3f5f;border-radius:6px;padding:8px 14px;font-size:12px;color:#e0e0e0">
+            <b style="color:#9b59b6">CENI传输</b><br><span style="color:#8899aa">未来网络模拟上传/回传</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="card">
-    <h3 style="margin-bottom:16px">上传动作数据</h3>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h3 style="margin:0">上传动作数据（CSV）</h3>
+      <button type="button" class="btn" style="background:#e67e22;color:#fff;font-size:13px;padding:8px 20px" onclick="demoEvaluate()">一键演示（运球数据）</button>
+    </div>
     <form id="uploadForm" class="upload-row">
       <div class="field">
         <label>标准动作 CSV</label>
@@ -119,6 +200,47 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
   </div>
 
   <div id="loading"><p>处理中...</p></div>
+
+  <!-- Video Analysis Section (YOLOv8-Pose) -->
+  <div class="card" style="margin-top:0">
+    <h3 style="margin-bottom:12px">视频分析（YOLOv8-Pose）<span style="font-size:12px;color:#8899aa;font-weight:400;margin-left:8px">上传运动视频，AI 自动提取骨架并评分</span></h3>
+    <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap">
+      <div class="field">
+        <label>运动视频</label>
+        <input type="file" id="videoFile" accept=".mp4,.avi,.mov,.mkv">
+      </div>
+      <button type="button" class="btn btn-primary" id="btnVideo" onclick="uploadVideo()">开始分析</button>
+    </div>
+    <div id="videoProgress" style="display:none;margin-top:12px">
+      <div style="background:#0d1b2a;border-radius:4px;height:20px;overflow:hidden">
+        <div id="videoProgressBar" style="background:#4472C4;height:100%;width:0%;transition:width 0.3s;border-radius:4px"></div>
+      </div>
+      <div style="font-size:12px;color:#8899aa;margin-top:4px" id="videoProgressText">等待中...</div>
+    </div>
+  </div>
+
+  <div id="videoResultSection" class="hidden">
+    <div class="card">
+      <h3 style="margin-bottom:12px">视频分析结果</h3>
+      <div class="result-grid">
+        <div>
+          <div class="score-big" id="videoTotalScore">--</div>
+          <div class="score-label">综合评分</div>
+          <div class="scores-list">
+            <div class="score-item"><div class="label">关节角度</div><div class="val" id="videoAngleScore">--</div></div>
+            <div class="score-item"><div class="label">身体稳定性</div><div class="val" id="videoStabilityScore">--</div></div>
+            <div class="score-item"><div class="label">动作幅度</div><div class="val" id="videoRomScore">--</div></div>
+            <div class="score-item"><div class="label">左右对称性</div><div class="val" id="videoSymScore">--</div></div>
+          </div>
+          <ul id="videoSuggestions" style="padding-left:20px;font-size:13px;line-height:2;margin-top:12px;color:#e0e0e0"></ul>
+        </div>
+        <div>
+          <video id="annotatedPlayer" controls style="width:100%;border-radius:8px;background:#000"></video>
+          <div style="font-size:12px;color:#8899aa;margin-top:4px">标注视频：骨架 + 评分面板</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div id="resultSection" class="hidden">
     <div class="card">
@@ -164,14 +286,15 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
     </div>
 
     <div id="skeleton3dSection" class="card hidden">
-      <h3 style="margin-bottom:8px">3D 骨架动画对比回放</h3>
-      <div id="threejs-container" style="height:420px;"></div>
+      <h3 style="margin-bottom:8px">3D 骨架动画对比回放 <span style="font-size:12px;color:#8899aa;font-weight:400">（鼠标左键旋转 / 滚轮缩放 / 右键平移）</span></h3>
+      <div id="threejs-container" style="height:520px;"></div>
       <div class="playback-controls">
         <button class="btn-play" id="btn3dPlay" onclick="toggle3dPlay()">▶ 播放</button>
         <input type="range" id="progressSlider" min="0" max="100" value="0" oninput="on3dSeek(this.value)">
         <select id="speedSelect" onchange="Skeleton3D.setSpeed(parseFloat(this.value))">
           <option value="0.5">0.5x</option>
           <option value="1" selected>1.0x</option>
+          <option value="1.5">1.5x</option>
           <option value="2">2.0x</option>
         </select>
         <span id="frameInfo">帧 0 / 0</span>
@@ -255,6 +378,27 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
 let currentTaskId = '';
 let radarChart = null;
 let diagChart = null;
+
+async function demoEvaluate() {
+  const btn = document.getElementById('btnScore');
+  btn.disabled = true;
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('resultSection').classList.add('hidden');
+  try {
+    const res = await fetch('/case2/demo_evaluate', { method: 'POST' });
+    const data = await res.json();
+    if (data.total_score !== undefined) {
+      showResult(data);
+    } else {
+      alert('演示失败: ' + (data.detail || JSON.stringify(data)));
+    }
+  } catch (err) {
+    alert('请求失败: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    document.getElementById('loading').style.display = 'none';
+  }
+}
 
 document.getElementById('uploadForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -422,21 +566,60 @@ function showDiagnosis(d) {
 function drawRadar(data) {
   const ctx = document.getElementById('radarChart').getContext('2d');
   if (radarChart) radarChart.destroy();
+  const scores = [data.rom_score, data.dtw_score, data.symmetry_score, data.rmse_score];
+  const colors = scores.map(s => s >= 80 ? '#27ae60' : s >= 60 ? '#f39c12' : '#e74c3c');
   radarChart = new Chart(ctx, {
     type: 'radar',
     data: {
-      labels: ['ROM 动作幅度', 'DTW 节奏一致性', '左右对称性', 'RMSE 关节精度'],
+      labels: ['ROM\n动作幅度', 'DTW\n节奏一致性', '左右对称性', 'RMSE\n关节精度'],
       datasets: [{
-        label: 'Score',
-        data: [data.rom_score, data.dtw_score, data.symmetry_score, data.rmse_score],
-        backgroundColor: 'rgba(68,114,196,0.2)',
+        label: '得分',
+        data: scores,
+        backgroundColor: 'rgba(68,114,196,0.15)',
         borderColor: '#4472C4',
-        pointBackgroundColor: '#4472C4',
+        borderWidth: 2,
+        pointBackgroundColor: colors,
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+      }, {
+        label: '及格线',
+        data: [60, 60, 60, 60],
+        backgroundColor: 'transparent',
+        borderColor: 'rgba(231,76,60,0.3)',
+        borderWidth: 1,
+        borderDash: [5, 5],
+        pointRadius: 0,
+        pointHoverRadius: 0,
       }]
     },
     options: {
-      scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } },
-      plugins: { legend: { display: false } }
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 100,
+          ticks: { stepSize: 20, color: '#556', backdropColor: 'transparent', font: { size: 10 } },
+          grid: { color: 'rgba(255,255,255,0.08)' },
+          angleLines: { color: 'rgba(255,255,255,0.08)' },
+          pointLabels: { color: '#aab', font: { size: 11 } }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1b2838',
+          borderColor: '#2a3f5f',
+          borderWidth: 1,
+          titleColor: '#7ec8e3',
+          bodyColor: '#e0e0e0',
+          callbacks: {
+            label: function(ctx) { return ctx.dataset.label + ': ' + ctx.raw.toFixed(1) + '分'; }
+          }
+        }
+      }
     }
   });
 }
@@ -473,9 +656,23 @@ function downloadReport() {
 var skeleton3dReady = false;
 
 function loadSkeletonData(taskId) {
-  fetch('/case2/skeleton_data/' + taskId).then(function(r) { return r.json(); }).then(function(data) {
+  var section = document.getElementById('skeleton3dSection');
+  if (!window.Skeleton3D) {
+    section.classList.remove('hidden');
+    document.getElementById('threejs-container').innerHTML =
+      '<div style="color:#e74c3c;padding:40px;text-align:center">Three.js 库加载失败，请检查网络连接后刷新页面。<br><small style="color:#8899aa">确保 cdn.bootcdn.net 或 cdnjs.cloudflare.com 可访问</small></div>';
+    return;
+  }
+  fetch('/case2/skeleton_data/' + taskId).then(function(r) {
+    if (!r.ok) throw new Error('API 返回 ' + r.status);
+    return r.json();
+  }).then(function(data) {
     if (!skeleton3dReady) {
+      section.style.display = 'block';
+      section.style.visibility = 'hidden';
+      section.classList.remove('hidden');
       Skeleton3D.init('threejs-container');
+      section.style.visibility = '';
       skeleton3dReady = true;
     }
     Skeleton3D.loadData(data);
@@ -483,7 +680,7 @@ function loadSkeletonData(taskId) {
     slider.max = data.frame_count - 1;
     slider.value = 0;
     updateFrameInfo(0, data.frame_count);
-    document.getElementById('skeleton3dSection').classList.remove('hidden');
+    section.classList.remove('hidden');
 
     window.on3dFrameChange = function(f) {
       slider.value = f;
@@ -493,7 +690,10 @@ function loadSkeletonData(taskId) {
       document.getElementById('btn3dPlay').textContent = '▶ 播放';
     };
   }).catch(function(err) {
-    console.warn('3D skeleton data unavailable:', err);
+    console.error('3D skeleton load failed:', err);
+    section.classList.remove('hidden');
+    document.getElementById('threejs-container').innerHTML =
+      '<div style="color:#f39c12;padding:40px;text-align:center">3D 骨架数据加载失败: ' + err.message + '<br><small style="color:#8899aa">请重新上传 CSV 文件后再试</small></div>';
   });
 }
 
@@ -518,6 +718,82 @@ function toggle3dPlay() {
 function on3dSeek(val) {
   Skeleton3D.seekTo(parseInt(val));
   updateFrameInfo(parseInt(val), Skeleton3D.getFrameCount());
+}
+
+// ── Video Analysis (YOLOv8-Pose) ──
+var videoPollTimer = null;
+
+async function uploadVideo() {
+  var file = document.getElementById('videoFile').files[0];
+  if (!file) { alert('请选择视频文件'); return; }
+
+  var btn = document.getElementById('btnVideo');
+  btn.disabled = true;
+  document.getElementById('videoProgress').style.display = 'block';
+  document.getElementById('videoProgressText').textContent = '上传中...';
+  document.getElementById('videoProgressBar').style.width = '5%';
+  document.getElementById('videoResultSection').classList.add('hidden');
+
+  var fd = new FormData();
+  fd.append('video', file);
+
+  try {
+    var resp = await fetch('/case2/upload_video', { method: 'POST', body: fd });
+    var data = await resp.json();
+    if (data.task_id) {
+      document.getElementById('videoProgressText').textContent = '分析中（YOLO 提取骨架 + 评分）...';
+      videoPollTimer = setInterval(function() { pollVideoStatus(data.task_id); }, 2000);
+    } else {
+      alert('上传失败: ' + (data.detail || JSON.stringify(data)));
+      btn.disabled = false;
+    }
+  } catch (err) {
+    alert('上传失败: ' + err.message);
+    btn.disabled = false;
+  }
+}
+
+async function pollVideoStatus(taskId) {
+  try {
+    var resp = await fetch('/case2/video_status/' + taskId);
+    var data = await resp.json();
+    document.getElementById('videoProgressBar').style.width = data.progress + '%';
+    document.getElementById('videoProgressText').textContent =
+      '分析进度: ' + data.progress + '% (' + data.status + ')';
+
+    if (data.status === 'completed') {
+      clearInterval(videoPollTimer);
+      document.getElementById('btnVideo').disabled = false;
+      showVideoResult(data.result, taskId);
+    } else if (data.status === 'failed') {
+      clearInterval(videoPollTimer);
+      document.getElementById('btnVideo').disabled = false;
+      document.getElementById('videoProgressText').textContent = '分析失败: ' + (data.error || '未知错误');
+    }
+  } catch (err) {
+    clearInterval(videoPollTimer);
+    document.getElementById('btnVideo').disabled = false;
+    document.getElementById('videoProgressText').textContent = '查询状态失败';
+  }
+}
+
+function showVideoResult(result, taskId) {
+  if (!result) return;
+  document.getElementById('videoTotalScore').textContent = result.total_score;
+  var dims = result.dimensions || [];
+  var dimIds = ['videoAngleScore', 'videoStabilityScore', 'videoRomScore', 'videoSymScore'];
+  for (var i = 0; i < dimIds.length; i++) {
+    document.getElementById(dimIds[i]).textContent = i < dims.length ? dims[i].score : '--';
+  }
+  var sugEl = document.getElementById('videoSuggestions');
+  sugEl.innerHTML = '';
+  (result.suggestions || []).forEach(function(s) {
+    var li = document.createElement('li');
+    li.textContent = s;
+    sugEl.appendChild(li);
+  });
+  document.getElementById('annotatedPlayer').src = '/case2/annotated_video/' + taskId;
+  document.getElementById('videoResultSection').classList.remove('hidden');
 }
 </script>
 </body>

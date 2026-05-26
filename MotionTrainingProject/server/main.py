@@ -3,6 +3,7 @@ import sys
 import time
 import uuid
 import shutil
+import threading
 import numpy as np
 import pandas as pd
 
@@ -125,6 +126,39 @@ async def case2_upload_motion(
     _log_latency(task_id, (t_upload - t0) * 1000, (t_score - t_upload) * 1000,
                  (t_total - t0) * 1000)
 
+    return result
+
+
+@app.post("/case2/demo_evaluate")
+async def case2_demo_evaluate():
+    t0 = time.time()
+    task_id = str(uuid.uuid4())[:8]
+
+    std_path = os.path.join(DATA_DIR, "raw_csv", "STD-dribble-001.csv")
+    stu_path = os.path.join(DATA_DIR, "raw_csv", "S001-dribble-001.csv")
+    if not os.path.exists(std_path) or not os.path.exists(stu_path):
+        raise HTTPException(404, "Demo data files not found")
+
+    std_clean = os.path.join(UPLOAD_DIR, f"{task_id}_std_clean.csv")
+    stu_clean = os.path.join(UPLOAD_DIR, f"{task_id}_stu_clean.csv")
+    preprocess(std_path, std_clean)
+    preprocess(stu_path, stu_clean)
+
+    std_df = read_csv(std_clean)
+    stu_df = read_csv(stu_clean)
+    std_angles = compute_all_angles(std_df)
+    stu_angles = compute_all_angles(stu_df)
+
+    result = full_scoring(std_angles, stu_angles, "S001", "dribble")
+    result["task_id"] = task_id
+
+    json_path = os.path.join(REPORTS_DIR, task_id, "result.json")
+    os.makedirs(os.path.dirname(json_path), exist_ok=True)
+    save_result(result, json_path)
+
+    result["latency_ms"] = round((time.time() - t0) * 1000, 1)
+    result["report_url"] = f"/case2/report/{task_id}"
+    result["report_ready"] = False
     return result
 
 
@@ -417,6 +451,39 @@ async def case4_upload_action(
     generate_drill_report(eval_result, report_dir)
     eval_result["report_url"] = f"/case4/report/{task_id}"
 
+    for cs in eval_result.get("core_network_status", []):
+        _core_net_status[cs["step"]] = cs["status"]
+
+    return eval_result
+
+
+@app.post("/case4/demo_evaluate")
+async def case4_demo_evaluate():
+    t0 = time.time()
+    task_id = str(uuid.uuid4())[:8]
+
+    csv_path = os.path.join(DATA_DIR, "raw_csv", "emergency_drill_001.csv")
+    if not os.path.exists(csv_path):
+        raise HTTPException(404, "Demo data file not found")
+
+    clean_path = os.path.join(UPLOAD_DIR, f"{task_id}_demo_clean.csv")
+    preprocess(csv_path, clean_path)
+    df = read_csv(clean_path)
+    angles = compute_all_angles(df)
+
+    actions = recognize_actions(df, angles, "earthquake")
+    eval_result = evaluate_drill(actions, "earthquake")
+    eval_result["task_id"] = task_id
+    eval_result["scenario"] = "earthquake"
+    eval_result["latency_ms"] = round((time.time() - t0) * 1000, 1)
+
+    report_dir = os.path.join(REPORTS_DIR, task_id)
+    generate_drill_report(eval_result, report_dir)
+    eval_result["report_url"] = f"/case4/report/{task_id}"
+
+    for cs in eval_result.get("core_network_status", []):
+        _core_net_status[cs["step"]] = cs["status"]
+
     return eval_result
 
 
@@ -528,6 +595,96 @@ async def case2_ceni_download(task_id: str):
             return FileResponse(os.path.join(report_dir, f), media_type="application/pdf",
                                 filename=f"{task_id}_ceni_report.pdf")
     raise HTTPException(404, "Report not found for CENI download")
+
+
+# ──── Case 2: Video Analysis (YOLOv8-Pose) ────
+
+ANNOTATED_DIR = os.path.join(BASE_DIR, "server", "static", "annotated_videos")
+os.makedirs(ANNOTATED_DIR, exist_ok=True)
+
+_video_tasks: dict = {}  # task_id -> {status, progress, result, output_path}
+
+
+def _process_video_background(task_id: str, video_path: str):
+    from video_analysis.processor import VideoProcessor
+    from video_analysis.scoring import score_motion
+    from video_analysis.writer import AnnotatedVideoWriter
+
+    try:
+        _video_tasks[task_id]["status"] = "processing"
+        _video_tasks[task_id]["progress"] = 10
+
+        processor = VideoProcessor()
+        frames_data, fps, detect_size = processor.process_video(video_path)
+        _video_tasks[task_id]["progress"] = 50
+
+        score_result = score_motion(frames_data, fps)
+        _video_tasks[task_id]["progress"] = 70
+
+        output_path = os.path.join(ANNOTATED_DIR, f"{task_id}_annotated.mp4")
+        writer = AnnotatedVideoWriter(video_path, fps, detect_size)
+        writer.write(frames_data, score_result, output_path)
+        _video_tasks[task_id]["progress"] = 95
+
+        _video_tasks[task_id]["result"] = score_result
+        _video_tasks[task_id]["output_path"] = output_path
+        _video_tasks[task_id]["status"] = "completed"
+        _video_tasks[task_id]["progress"] = 100
+
+    except Exception as e:
+        _video_tasks[task_id]["status"] = "failed"
+        _video_tasks[task_id]["error"] = str(e)
+
+
+@app.post("/case2/upload_video")
+async def case2_upload_video(video: UploadFile = File(...)):
+    if not video.filename.endswith((".mp4", ".avi", ".mov", ".mkv")):
+        raise HTTPException(400, "Only video files (mp4/avi/mov/mkv) are supported")
+
+    task_id = str(uuid.uuid4())[:8]
+    video_path = os.path.join(UPLOAD_DIR, f"{task_id}_video{os.path.splitext(video.filename)[1]}")
+    with open(video_path, "wb") as f:
+        shutil.copyfileobj(video.file, f)
+
+    _video_tasks[task_id] = {
+        "status": "queued",
+        "progress": 0,
+        "result": None,
+        "output_path": None,
+        "error": None,
+    }
+
+    thread = threading.Thread(target=_process_video_background, args=(task_id, video_path), daemon=True)
+    thread.start()
+
+    return {"task_id": task_id, "status": "queued"}
+
+
+@app.get("/case2/video_status/{task_id}")
+async def case2_video_status(task_id: str):
+    if task_id not in _video_tasks:
+        raise HTTPException(404, "Task not found")
+    task = _video_tasks[task_id]
+    return {
+        "task_id": task_id,
+        "status": task["status"],
+        "progress": task["progress"],
+        "result": task["result"],
+        "error": task.get("error"),
+    }
+
+
+@app.get("/case2/annotated_video/{task_id}")
+async def case2_annotated_video(task_id: str):
+    if task_id not in _video_tasks:
+        raise HTTPException(404, "Task not found")
+    task = _video_tasks[task_id]
+    if task["status"] != "completed" or not task["output_path"]:
+        raise HTTPException(400, "Video not ready yet")
+    if not os.path.exists(task["output_path"]):
+        raise HTTPException(404, "Annotated video file not found")
+    return FileResponse(task["output_path"], media_type="video/mp4",
+                        filename=f"{task_id}_annotated.mp4")
 
 
 # ──── Root ────

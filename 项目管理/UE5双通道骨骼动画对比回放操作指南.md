@@ -6,11 +6,15 @@
 
 **最终效果：** 左侧播放标准动作（蓝色骨骼），右侧播放学生动作（偏差关节着色），底部显示评分面板。
 
+**推荐方案：** OptiTrack LiveLink 实时流（方案 C）— 无需 FBX，Motive 直连 UE5。
+
 **前置条件：**
 - Unreal Engine 5.7（已安装）
-- FZMotion 导出的 FBX 动画文件（如 `basketball_001.fbx`）
-- FZMotion 导出的 CSV 数据文件（如 `basketball_001.csv`）
+- OptiTrack Motive（实验室已安装）
+- Motive 导出的 CSV 数据文件（如 `basketball_001.csv`）
 - Python 3.11+（motion-eval 模块）
+
+> **已知问题：** Motive 导出的 FBX 仅含骨骼数据（无网格体），UE5 5.7 无法直接导入。请使用方案 C（LiveLink）或方案 D（Mixamo 角色 + 重定向）。
 
 ---
 
@@ -126,6 +130,124 @@ python split_fbx.py basketball_001.fbx --split 0.5
 - 角色朝下/躺倒 → 调整导入时的 Forward Axis 和 Up Axis
 - 角色太大/太小 → 重新导入调整 Scale（FZMotion 单位 mm，UE5 单位 cm，可能需要 0.1 缩放）
 - 动画抖动 → 检查帧率是否匹配（120fps）
+
+---
+
+## 方案 C：OptiTrack LiveLink 实时流（推荐，实验室最快落地）
+
+> 无需 FBX 导入，Motive 直连 UE5 实时传输骨骼数据。
+
+### 前置条件
+
+- 实验室电脑同时运行 Motive 和 UE5
+- OptiTrack LiveLink 插件（UE5 内置或从 OptiTrack 官网下载）
+
+### C.1 UE5 启用插件
+
+1. 菜单 → Edit → Plugins
+2. 搜索并启用：
+   - **LiveLink**（内置插件）
+   - **LiveLink OptiTrack**（如未内置，从 https://docs.optitrack.com/plugins/ 下载安装）
+3. 重启 UE5
+
+### C.2 Motive 端配置
+
+1. 打开 Motive，加载标定好的项目
+2. 菜单 → View → Settings → **Streaming**
+3. 勾选 **Broadcast Bone Data**
+4. 设置：
+   - Interface: **Local** (127.0.0.1) 或实验室局域网 IP
+   - Port: **1511**（默认）
+   - Rigid Bodies: ✅
+   - Skeletons: ✅
+5. 点击 **Start Streaming**
+
+### C.3 UE5 端连接 LiveLink
+
+1. 菜单 → Window → **Live Link**
+2. 点击 **+ Source** → 选择 **OptiTrack Stream**
+3. 确认 Connection Settings：
+   - Server IP: 127.0.0.1（本机）或 Motive 的 IP
+   - Port: 1511
+4. 如果连接正常，Live Link 面板中会出现 Motive 发送的骨骼 Subject
+
+### C.4 使用 UE5 内置角色接收动捕
+
+1. 在场景中放置 UE5 第三人称模板角色 **Manny**（或 Quinn）：
+   - Add → Skeletal Mesh → 选择 `SKM_Manny`
+2. 选中 Manny 的 SkeletalMeshComponent
+3. 在 Details 面板搜索 **Live Link**
+4. 启用 **Live Link**：
+   - Subject Name: 选择 Motive 发送的骨骼名
+   - Role: **Animation**
+5. 此时角色会实时跟随 Motive 中的动捕数据
+
+### C.5 录制动画序列（离线回放用）
+
+1. 菜单 → Window → **Take Recorder**
+2. 点击 **+ Source** → **Live Link Subject** → 选择骨骼
+3. 点击红色录制按钮开始录制
+4. 在 Motive 中回放动画（或让演员重新表演）
+5. 停止录制 → 自动生成 Level Sequence + AnimSequence
+
+### C.6 双通道对比
+
+1. 录制两段动画（标准 + 学生）
+2. 场景中放置两个 Manny 角色，左右并排
+3. 分别指定不同的 AnimSequence
+4. 用 Sequencer 同步播放
+
+### 参考资源
+
+- [OptiTrack LiveLink 官方文档](https://docs.optitrack.com/plugins/optitrack-unreal-engine-plugin/unreal-engine-optitrack-live-link-plugin)
+- [UE 5.6 Performance Capture 新功能](https://www.youtube.com/watch?v=nuoYdcF3hSQ)
+
+---
+
+## 方案 D：Mixamo 角色 + CSV 重定向（离线备选）
+
+> 适用于无法使用 LiveLink 的情况。用免费 Mixamo 角色替代 Motive FBX。
+
+### D.1 下载 Mixamo 角色
+
+1. 访问 [Mixamo.com](https://www.mixamo.com)（Adobe 免费账号）
+2. 选择一个角色（如 "Warrior" 或 "X Bot"）
+3. 下载格式：**FBX for Unity (.fbx)**，选择 **With Skin**
+
+### D.2 导入 UE5
+
+1. 将 FBX 拖入 Content Browser
+2. 导入设置选择：
+   - Skeleton: **Create New**
+   - Import As: **Skeletal Mesh**
+3. 导入成功后会自动生成 Skeleton + Skeletal Mesh
+
+### D.3 用 Python 脚本生成动画
+
+在 UE5 编辑器的 Python 控制台中运行脚本，从 CSV 读取坐标，生成 AnimSequence：
+
+```python
+import unreal
+import json, csv, os
+
+def csv_to_anim_sequence(csv_path, skeleton_asset, anim_name, fps=30):
+    """从 Motive CSV 创建 UE5 AnimSequence"""
+    # 读取 CSV 坐标数据
+    # 创建 AnimSequence
+    # 逐帧设置骨骼 Transform
+    # 保存资产
+    pass
+```
+
+> 注意：此脚本需要根据实际骨骼层级和命名映射编写，复杂度较高。建议优先使用 LiveLink 方案。
+
+### D.4 IK Retargeting（如果 Mixamo 骨骼和 Manny 不兼容）
+
+1. 菜单 → Window → **IK Retargeter**
+2. Source: Mixamo Skeleton
+3. Target: Manny Skeleton
+4. 手动映射骨骼链
+5. 导出 Retargeted AnimSequence
 
 ---
 
