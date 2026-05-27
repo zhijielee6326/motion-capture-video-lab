@@ -687,6 +687,29 @@ async def case2_annotated_video(task_id: str):
                         filename=f"{task_id}_annotated.mp4")
 
 
+# ──── Case 1: Motion Capture Quality Dashboard (Kinetics Toolkit) ────
+
+CASE1_ANALYSIS_DIR = os.path.join(BASE_DIR, "data", "case1_analysis")
+
+
+@app.get("/case1/quality_summary")
+async def case1_quality_summary():
+    summary_path = os.path.join(CASE1_ANALYSIS_DIR, "dance_motion_capture_quality_summary.csv")
+    if not os.path.exists(summary_path):
+        raise HTTPException(404, "Quality summary not found")
+    df = pd.read_csv(summary_path)
+    return df.iloc[0].to_dict()
+
+
+@app.get("/case1/joint_metrics")
+async def case1_joint_metrics():
+    metrics_path = os.path.join(CASE1_ANALYSIS_DIR, "dance_key_joint_metrics.csv")
+    if not os.path.exists(metrics_path):
+        raise HTTPException(404, "Joint metrics not found")
+    df = pd.read_csv(metrics_path)
+    return df.to_dict(orient="records")
+
+
 # ──── Root ────
 
 @app.get("/", response_class=HTMLResponse)

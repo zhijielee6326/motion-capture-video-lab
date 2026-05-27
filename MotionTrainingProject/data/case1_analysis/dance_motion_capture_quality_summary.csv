@@ -1,0 +1,2 @@
+ktk_version,input_flat_csv,frames,duration_s,sample_rate_hz,all_channels_analyzed,major_key_joints_analyzed,poor_major_key_joints,warning_major_key_joints,ok_major_key_joints,worst_rms_joint,worst_rms_jitter_mm,worst_jump_joint,worst_max_jump_mm,most_missing_joint,most_missing_percent
+0.17.0,data\clean\dance_timeseries_flat.csv,7201,60.0,120.00480019200238,111,23,3,3,17,RWrist,16.89989833416679,RWrist,988.4591217100318,LAnkle,11.137342035828357

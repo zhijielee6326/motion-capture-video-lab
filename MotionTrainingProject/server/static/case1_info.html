@@ -233,6 +233,46 @@ body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;backgroun
     </div>
   </div>
 
+  <!-- Motion Capture Quality Dashboard (Kinetics Toolkit) -->
+  <div class="section">
+    <h2>动捕数据质量分析 <span style="font-size:12px;color:#667;font-weight:400;margin-left:8px">基于 Kinetics Toolkit 对健美操舞蹈数据的分析结果</span></h2>
+
+    <div class="metric-row" id="qualitySummary">
+      <div class="metric"><div class="val" id="qFrames">--</div><div class="label">采集帧数</div></div>
+      <div class="metric"><div class="val" id="qDuration">--</div><div class="label">时长(秒)</div></div>
+      <div class="metric"><div class="val" id="qRate">--</div><div class="label">采样率(Hz)</div></div>
+      <div class="metric"><div class="val" id="qOk" style="color:#27ae60">--</div><div class="label">OK 关节</div></div>
+      <div class="metric"><div class="val" id="qWarn" style="color:#f39c12">--</div><div class="label">Warning 关节</div></div>
+      <div class="metric"><div class="val" id="qPoor" style="color:#e74c3c">--</div><div class="label">Poor 关节</div></div>
+    </div>
+
+    <h3>关键关节质量指标</h3>
+    <div style="overflow-x:auto;margin:12px 0">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:#0d1b2a">
+            <th style="padding:8px 12px;text-align:left;color:#7ec8e3">关节</th>
+            <th style="padding:8px 12px;text-align:center;color:#7ec8e3">质量</th>
+            <th style="padding:8px 12px;text-align:right;color:#7ec8e3">RMS抖动(mm)</th>
+            <th style="padding:8px 12px;text-align:right;color:#7ec8e3">最大跳跃(mm)</th>
+            <th style="padding:8px 12px;text-align:right;color:#7ec8e3">缺失率(%)</th>
+            <th style="padding:8px 12px;text-align:right;color:#7ec8e3">跳跃帧(时间)</th>
+          </tr>
+        </thead>
+        <tbody id="jointTableBody"></tbody>
+      </table>
+    </div>
+
+    <h3>RMS 抖动排名</h3>
+    <div style="margin:12px 0"><img src="/static/dance_key_joint_rms_jitter_rank.png" style="width:100%;max-width:800px;border-radius:8px"></div>
+
+    <h3>最大跳跃排名</h3>
+    <div style="margin:12px 0"><img src="/static/dance_key_joint_max_jump_rank.png" style="width:100%;max-width:800px;border-radius:8px"></div>
+
+    <h3>缺失率排名</h3>
+    <div style="margin:12px 0"><img src="/static/dance_key_joint_missing_rank.png" style="width:100%;max-width:800px;border-radius:8px"></div>
+  </div>
+
   <!-- Key Observations -->
   <div class="section">
     <h2>关键观察指标</h2>
@@ -265,5 +305,39 @@ body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;backgroun
 <div class="footer">
   动捕视频采集与传输实验 &copy; 2026 &nbsp;|&nbsp; <a href="/" style="color:#4472C4;text-decoration:none">返回首页</a>
 </div>
+<script>
+async function loadQualityData() {
+  try {
+    var summary = await (await fetch('/case1/quality_summary')).json();
+    document.getElementById('qFrames').textContent = summary.frames;
+    document.getElementById('qDuration').textContent = summary.duration_s;
+    document.getElementById('qRate').textContent = parseFloat(summary.sample_rate_hz).toFixed(0);
+    document.getElementById('qOk').textContent = summary.ok_major_key_joints;
+    document.getElementById('qWarn').textContent = summary.warning_major_key_joints;
+    document.getElementById('qPoor').textContent = summary.poor_major_key_joints;
+
+    var joints = await (await fetch('/case1/joint_metrics')).json();
+    var tbody = document.getElementById('jointTableBody');
+    tbody.innerHTML = '';
+    joints.forEach(function(j) {
+      var flagColor = j.quality_flag === 'ok' ? '#27ae60' : j.quality_flag === 'warning' ? '#f39c12' : '#e74c3c';
+      var flagBg = j.quality_flag === 'ok' ? 'rgba(39,174,96,.12)' : j.quality_flag === 'warning' ? 'rgba(243,156,18,.12)' : 'rgba(231,76,60,.12)';
+      var tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid #1a2a40';
+      tr.innerHTML =
+        '<td style="padding:8px 12px;color:#e0e0e0">' + j.joint + '</td>' +
+        '<td style="padding:8px 12px;text-align:center"><span style="padding:3px 10px;border-radius:4px;background:' + flagBg + ';color:' + flagColor + ';font-weight:600;font-size:11px">' + j.quality_flag.toUpperCase() + '</span></td>' +
+        '<td style="padding:8px 12px;text-align:right;color:' + (j.rms_jitter_mm > 20 ? '#f39c12' : '#e0e0e0') + '">' + j.rms_jitter_mm.toFixed(1) + '</td>' +
+        '<td style="padding:8px 12px;text-align:right;color:' + (j.max_instantaneous_jump_mm > 200 ? '#e74c3c' : '#e0e0e0') + '">' + j.max_instantaneous_jump_mm.toFixed(1) + '</td>' +
+        '<td style="padding:8px 12px;text-align:right;color:' + (j.missing_percent > 2 ? '#f39c12' : '#e0e0e0') + '">' + j.missing_percent.toFixed(1) + '</td>' +
+        '<td style="padding:8px 12px;text-align:right;color:#8899aa;font-size:11px">' + j.max_jump_frame + ' (' + j.max_jump_time_s.toFixed(1) + 's)</td>';
+      tbody.appendChild(tr);
+    });
+  } catch(e) {
+    console.error('Failed to load quality data:', e);
+  }
+}
+loadQualityData();
+</script>
 </body>
 </html>
