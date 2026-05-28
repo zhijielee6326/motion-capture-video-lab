@@ -273,6 +273,38 @@ body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;backgroun
     <div style="margin:12px 0"><img src="/static/dance_key_joint_missing_rank.png" style="width:100%;max-width:800px;border-radius:8px"></div>
   </div>
 
+  <!-- Quality Comparison: Normal vs Abnormal -->
+  <div class="section">
+    <h2>动捕质量对比 — 正常 vs 异常条件 <span style="font-size:12px;color:#667;font-weight:400;margin-left:8px">同一健美操表演，4种采集条件</span></h2>
+
+    <div class="metric-row" id="compSummary">
+      <!-- Filled by JS -->
+    </div>
+
+    <h3>关节质量分布对比</h3>
+    <div style="overflow-x:auto;margin:12px 0">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:#0d1b2a">
+            <th style="padding:8px 12px;text-align:left;color:#7ec8e3">数据集</th>
+            <th style="padding:8px 12px;text-align:center;color:#27ae60">OK</th>
+            <th style="padding:8px 12px;text-align:center;color:#f39c12">Warning</th>
+            <th style="padding:8px 12px;text-align:center;color:#e74c3c">Poor</th>
+            <th style="padding:8px 12px;text-align:right;color:#7ec8e3">最差RMS(mm)</th>
+            <th style="padding:8px 12px;text-align:right;color:#7ec8e3">最差跳跃(mm)</th>
+          </tr>
+        </thead>
+        <tbody id="compTableBody"></tbody>
+      </table>
+    </div>
+
+    <h3>质量指标对比图</h3>
+    <div style="margin:12px 0"><img src="/static/case1_quality_comparison.png" style="width:100%;border-radius:8px"></div>
+
+    <h3>右腕 X 轨迹对比</h3>
+    <div style="margin:12px 0"><img src="/static/case1_trajectory_comparison.png" style="width:100%;border-radius:8px"></div>
+  </div>
+
   <!-- Key Observations -->
   <div class="section">
     <h2>关键观察指标</h2>
@@ -338,6 +370,42 @@ async function loadQualityData() {
   }
 }
 loadQualityData();
+loadComparisonData();
+
+async function loadComparisonData() {
+  try {
+    var data = await (await fetch('/case1/quality_comparison')).json();
+    var keys = Object.keys(data);
+
+    // Summary cards
+    var summaryEl = document.getElementById('compSummary');
+    summaryEl.innerHTML = '';
+    keys.forEach(function(k) {
+      var s = data[k].summary;
+      var border = k.indexOf('正常') >= 0 ? '#27ae60' : k.indexOf('遮挡') >= 0 ? '#f39c12' : k.indexOf('少') >= 0 ? '#e74c3c' : '#e67e22';
+      summaryEl.innerHTML += '<div class="metric" style="border:2px solid ' + border + ';border-radius:8px"><div class="val" style="font-size:16px;color:' + border + '">' + k + '</div><div style="font-size:12px;margin-top:4px"><span style="color:#27ae60">' + s.ok + ' OK</span> <span style="color:#f39c12">' + s.warning + ' W</span> <span style="color:#e74c3c">' + s.poor + ' P</span></div></div>';
+    });
+
+    // Table
+    var tbody = document.getElementById('compTableBody');
+    tbody.innerHTML = '';
+    keys.forEach(function(k) {
+      var s = data[k].summary;
+      var tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid #1a2a40';
+      tr.innerHTML =
+        '<td style="padding:8px 12px;color:#e0e0e0;font-weight:600">' + k + '</td>' +
+        '<td style="padding:8px 12px;text-align:center;color:#27ae60;font-weight:600">' + s.ok + '</td>' +
+        '<td style="padding:8px 12px;text-align:center;color:#f39c12;font-weight:600">' + s.warning + '</td>' +
+        '<td style="padding:8px 12px;text-align:center;color:#e74c3c;font-weight:600">' + s.poor + '</td>' +
+        '<td style="padding:8px 12px;text-align:right;color:#e0e0e0">' + s.worst_rms_mm.toFixed(1) + ' (' + s.worst_rms_joint + ')</td>' +
+        '<td style="padding:8px 12px;text-align:right;color:#e0e0e0">' + s.worst_jump_mm.toFixed(1) + ' (' + s.worst_jump_joint + ')</td>';
+      tbody.appendChild(tr);
+    });
+  } catch(e) {
+    console.error('Failed to load comparison data:', e);
+  }
+}
 </script>
 </body>
 </html>

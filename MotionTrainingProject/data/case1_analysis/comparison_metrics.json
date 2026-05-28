@@ -1,0 +1,486 @@
+{
+  "正常(最佳标定)": {
+    "summary": {
+      "label": "正常(最佳标定)",
+      "sample_rate": 120.0,
+      "joints_analyzed": 15,
+      "ok": 15,
+      "warning": 0,
+      "poor": 0,
+      "worst_rms_joint": "LWrist",
+      "worst_rms_mm": 4.5,
+      "worst_jump_joint": "RKnee",
+      "worst_jump_mm": 126.3
+    },
+    "joints": {
+      "LWrist": {
+        "rms_jitter_mm": 4.5,
+        "max_jump_mm": 40.8,
+        "missing_percent": 0.0,
+        "max_jump_frame": 7190,
+        "quality": "ok"
+      },
+      "RWrist": {
+        "rms_jitter_mm": 4.1,
+        "max_jump_mm": 41.1,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6693,
+        "quality": "ok"
+      },
+      "LElbow": {
+        "rms_jitter_mm": 2.9,
+        "max_jump_mm": 78.4,
+        "missing_percent": 0.6,
+        "max_jump_frame": 408,
+        "quality": "ok"
+      },
+      "RElbow": {
+        "rms_jitter_mm": 2.1,
+        "max_jump_mm": 21.8,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3331,
+        "quality": "ok"
+      },
+      "LShoulder": {
+        "rms_jitter_mm": 0.9,
+        "max_jump_mm": 14.4,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1726,
+        "quality": "ok"
+      },
+      "RShoulder": {
+        "rms_jitter_mm": 0.9,
+        "max_jump_mm": 14.3,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1726,
+        "quality": "ok"
+      },
+      "LHip": {
+        "rms_jitter_mm": 2.8,
+        "max_jump_mm": 64.2,
+        "missing_percent": 0.0,
+        "max_jump_frame": 531,
+        "quality": "ok"
+      },
+      "RHip": {
+        "rms_jitter_mm": 2.4,
+        "max_jump_mm": 96.0,
+        "missing_percent": 0.0,
+        "max_jump_frame": 5992,
+        "quality": "ok"
+      },
+      "LKnee": {
+        "rms_jitter_mm": 2.0,
+        "max_jump_mm": 60.3,
+        "missing_percent": 0.3,
+        "max_jump_frame": 5260,
+        "quality": "ok"
+      },
+      "RKnee": {
+        "rms_jitter_mm": 1.9,
+        "max_jump_mm": 126.3,
+        "missing_percent": 0.2,
+        "max_jump_frame": 6947,
+        "quality": "ok"
+      },
+      "LAnkle": {
+        "rms_jitter_mm": 2.3,
+        "max_jump_mm": 28.7,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1730,
+        "quality": "ok"
+      },
+      "RAnkle": {
+        "rms_jitter_mm": 2.4,
+        "max_jump_mm": 30.4,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1692,
+        "quality": "ok"
+      },
+      "Head": {
+        "rms_jitter_mm": 0.8,
+        "max_jump_mm": 13.5,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1726,
+        "quality": "ok"
+      },
+      "Neck": {
+        "rms_jitter_mm": 0.9,
+        "max_jump_mm": 14.2,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1726,
+        "quality": "ok"
+      },
+      "Chest": {
+        "rms_jitter_mm": 0.9,
+        "max_jump_mm": 15.0,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3679,
+        "quality": "ok"
+      }
+    }
+  },
+  "标定结果差": {
+    "summary": {
+      "label": "标定结果差",
+      "sample_rate": 120.0,
+      "joints_analyzed": 15,
+      "ok": 13,
+      "warning": 2,
+      "poor": 0,
+      "worst_rms_joint": "LWrist",
+      "worst_rms_mm": 4.2,
+      "worst_jump_joint": "LKnee",
+      "worst_jump_mm": 341.3
+    },
+    "joints": {
+      "LWrist": {
+        "rms_jitter_mm": 4.2,
+        "max_jump_mm": 68.2,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1526,
+        "quality": "ok"
+      },
+      "RWrist": {
+        "rms_jitter_mm": 4.0,
+        "max_jump_mm": 73.3,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1521,
+        "quality": "ok"
+      },
+      "LElbow": {
+        "rms_jitter_mm": 2.7,
+        "max_jump_mm": 50.9,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6119,
+        "quality": "ok"
+      },
+      "RElbow": {
+        "rms_jitter_mm": 2.5,
+        "max_jump_mm": 27.3,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1283,
+        "quality": "ok"
+      },
+      "LShoulder": {
+        "rms_jitter_mm": 1.0,
+        "max_jump_mm": 19.9,
+        "missing_percent": 0.0,
+        "max_jump_frame": 770,
+        "quality": "ok"
+      },
+      "RShoulder": {
+        "rms_jitter_mm": 0.9,
+        "max_jump_mm": 14.2,
+        "missing_percent": 0.0,
+        "max_jump_frame": 4848,
+        "quality": "ok"
+      },
+      "LHip": {
+        "rms_jitter_mm": 3.0,
+        "max_jump_mm": 61.7,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6126,
+        "quality": "ok"
+      },
+      "RHip": {
+        "rms_jitter_mm": 2.0,
+        "max_jump_mm": 67.8,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6702,
+        "quality": "ok"
+      },
+      "LKnee": {
+        "rms_jitter_mm": 2.2,
+        "max_jump_mm": 341.3,
+        "missing_percent": 2.6,
+        "max_jump_frame": 5209,
+        "quality": "warning"
+      },
+      "RKnee": {
+        "rms_jitter_mm": 2.1,
+        "max_jump_mm": 235.9,
+        "missing_percent": 1.7,
+        "max_jump_frame": 7045,
+        "quality": "warning"
+      },
+      "LAnkle": {
+        "rms_jitter_mm": 2.2,
+        "max_jump_mm": 30.7,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1706,
+        "quality": "ok"
+      },
+      "RAnkle": {
+        "rms_jitter_mm": 2.4,
+        "max_jump_mm": 47.3,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6213,
+        "quality": "ok"
+      },
+      "Head": {
+        "rms_jitter_mm": 0.8,
+        "max_jump_mm": 39.5,
+        "missing_percent": 0.0,
+        "max_jump_frame": 770,
+        "quality": "ok"
+      },
+      "Neck": {
+        "rms_jitter_mm": 1.0,
+        "max_jump_mm": 17.6,
+        "missing_percent": 0.0,
+        "max_jump_frame": 770,
+        "quality": "ok"
+      },
+      "Chest": {
+        "rms_jitter_mm": 1.0,
+        "max_jump_mm": 14.5,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1690,
+        "quality": "ok"
+      }
+    }
+  },
+  "少两个标记点": {
+    "summary": {
+      "label": "少两个标记点",
+      "sample_rate": 120.0,
+      "joints_analyzed": 15,
+      "ok": 11,
+      "warning": 2,
+      "poor": 2,
+      "worst_rms_joint": "LElbow",
+      "worst_rms_mm": 4.8,
+      "worst_jump_joint": "LElbow",
+      "worst_jump_mm": 1255.7
+    },
+    "joints": {
+      "LWrist": {
+        "rms_jitter_mm": 4.3,
+        "max_jump_mm": 67.8,
+        "missing_percent": 0.0,
+        "max_jump_frame": 5713,
+        "quality": "ok"
+      },
+      "RWrist": {
+        "rms_jitter_mm": 4.0,
+        "max_jump_mm": 40.3,
+        "missing_percent": 0.0,
+        "max_jump_frame": 4198,
+        "quality": "ok"
+      },
+      "LElbow": {
+        "rms_jitter_mm": 4.8,
+        "max_jump_mm": 1255.7,
+        "missing_percent": 99.5,
+        "max_jump_frame": 4,
+        "quality": "poor"
+      },
+      "RElbow": {
+        "rms_jitter_mm": 0.7,
+        "max_jump_mm": 1032.0,
+        "missing_percent": 99.9,
+        "max_jump_frame": 1,
+        "quality": "poor"
+      },
+      "LShoulder": {
+        "rms_jitter_mm": 1.0,
+        "max_jump_mm": 16.0,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3688,
+        "quality": "ok"
+      },
+      "RShoulder": {
+        "rms_jitter_mm": 0.9,
+        "max_jump_mm": 16.2,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3688,
+        "quality": "ok"
+      },
+      "LHip": {
+        "rms_jitter_mm": 2.5,
+        "max_jump_mm": 58.1,
+        "missing_percent": 0.0,
+        "max_jump_frame": 2443,
+        "quality": "ok"
+      },
+      "RHip": {
+        "rms_jitter_mm": 2.2,
+        "max_jump_mm": 69.2,
+        "missing_percent": 0.0,
+        "max_jump_frame": 2936,
+        "quality": "ok"
+      },
+      "LKnee": {
+        "rms_jitter_mm": 2.1,
+        "max_jump_mm": 463.1,
+        "missing_percent": 4.7,
+        "max_jump_frame": 5640,
+        "quality": "warning"
+      },
+      "RKnee": {
+        "rms_jitter_mm": 2.0,
+        "max_jump_mm": 297.5,
+        "missing_percent": 1.6,
+        "max_jump_frame": 7085,
+        "quality": "warning"
+      },
+      "LAnkle": {
+        "rms_jitter_mm": 2.2,
+        "max_jump_mm": 28.5,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1732,
+        "quality": "ok"
+      },
+      "RAnkle": {
+        "rms_jitter_mm": 2.4,
+        "max_jump_mm": 30.2,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1685,
+        "quality": "ok"
+      },
+      "Head": {
+        "rms_jitter_mm": 0.8,
+        "max_jump_mm": 13.4,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1726,
+        "quality": "ok"
+      },
+      "Neck": {
+        "rms_jitter_mm": 0.9,
+        "max_jump_mm": 14.5,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1726,
+        "quality": "ok"
+      },
+      "Chest": {
+        "rms_jitter_mm": 1.0,
+        "max_jump_mm": 21.6,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3688,
+        "quality": "ok"
+      }
+    }
+  },
+  "遮挡摄像头": {
+    "summary": {
+      "label": "遮挡摄像头",
+      "sample_rate": 120.0,
+      "joints_analyzed": 15,
+      "ok": 13,
+      "warning": 2,
+      "poor": 0,
+      "worst_rms_joint": "LWrist",
+      "worst_rms_mm": 4.6,
+      "worst_jump_joint": "LKnee",
+      "worst_jump_mm": 383.9
+    },
+    "joints": {
+      "LWrist": {
+        "rms_jitter_mm": 4.6,
+        "max_jump_mm": 86.9,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3063,
+        "quality": "ok"
+      },
+      "RWrist": {
+        "rms_jitter_mm": 3.9,
+        "max_jump_mm": 40.7,
+        "missing_percent": 0.0,
+        "max_jump_frame": 4179,
+        "quality": "ok"
+      },
+      "LElbow": {
+        "rms_jitter_mm": 2.9,
+        "max_jump_mm": 73.5,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3837,
+        "quality": "ok"
+      },
+      "RElbow": {
+        "rms_jitter_mm": 2.6,
+        "max_jump_mm": 27.2,
+        "missing_percent": 0.0,
+        "max_jump_frame": 5145,
+        "quality": "ok"
+      },
+      "LShoulder": {
+        "rms_jitter_mm": 0.9,
+        "max_jump_mm": 15.3,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3156,
+        "quality": "ok"
+      },
+      "RShoulder": {
+        "rms_jitter_mm": 0.9,
+        "max_jump_mm": 13.0,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3156,
+        "quality": "ok"
+      },
+      "LHip": {
+        "rms_jitter_mm": 3.0,
+        "max_jump_mm": 148.6,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3156,
+        "quality": "ok"
+      },
+      "RHip": {
+        "rms_jitter_mm": 2.3,
+        "max_jump_mm": 54.0,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3713,
+        "quality": "ok"
+      },
+      "LKnee": {
+        "rms_jitter_mm": 2.2,
+        "max_jump_mm": 383.9,
+        "missing_percent": 2.1,
+        "max_jump_frame": 5716,
+        "quality": "warning"
+      },
+      "RKnee": {
+        "rms_jitter_mm": 2.3,
+        "max_jump_mm": 278.1,
+        "missing_percent": 1.7,
+        "max_jump_frame": 6982,
+        "quality": "warning"
+      },
+      "LAnkle": {
+        "rms_jitter_mm": 2.3,
+        "max_jump_mm": 29.3,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1779,
+        "quality": "ok"
+      },
+      "RAnkle": {
+        "rms_jitter_mm": 2.4,
+        "max_jump_mm": 30.5,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1738,
+        "quality": "ok"
+      },
+      "Head": {
+        "rms_jitter_mm": 0.8,
+        "max_jump_mm": 12.5,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1779,
+        "quality": "ok"
+      },
+      "Neck": {
+        "rms_jitter_mm": 0.9,
+        "max_jump_mm": 12.1,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1779,
+        "quality": "ok"
+      },
+      "Chest": {
+        "rms_jitter_mm": 0.9,
+        "max_jump_mm": 24.1,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3156,
+        "quality": "ok"
+      }
+    }
+  }
+}

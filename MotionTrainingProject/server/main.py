@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import time
 import uuid
 import shutil
@@ -708,6 +709,15 @@ async def case1_joint_metrics():
         raise HTTPException(404, "Joint metrics not found")
     df = pd.read_csv(metrics_path)
     return df.to_dict(orient="records")
+
+
+@app.get("/case1/quality_comparison")
+async def case1_quality_comparison():
+    comp_path = os.path.join(CASE1_ANALYSIS_DIR, "comparison_metrics.json")
+    if not os.path.exists(comp_path):
+        raise HTTPException(404, "Comparison data not found")
+    with open(comp_path, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 # ──── Root ────
