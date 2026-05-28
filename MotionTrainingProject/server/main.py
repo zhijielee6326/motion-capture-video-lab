@@ -8,8 +8,8 @@ import threading
 import numpy as np
 import pandas as pd
 
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
+from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -411,12 +411,6 @@ async def case1_info():
     return FileResponse(html_path)
 
 
-@app.get("/case3/info", response_class=HTMLResponse)
-async def case3_info():
-    html_path = os.path.join(BASE_DIR, "server", "static", "case3_info.html")
-    return FileResponse(html_path)
-
-
 # ──── Case 4: Emergency Drill ────
 
 @app.get("/case4/dashboard", response_class=HTMLResponse)
@@ -554,6 +548,102 @@ async def case4_download_report(task_id: str):
         raise HTTPException(404, "Report not found")
     return FileResponse(pdf_path, media_type="application/pdf",
                         filename=f"{task_id}_drill_report.pdf")
+
+
+# ──── Case 4: Video Timeline Mode ────
+
+from emergency.video_timeline_configs import get_video_timeline
+
+
+@app.get("/case4/timeline_config/{scenario_id}")
+async def case4_timeline_config(scenario_id: str):
+    config = get_video_timeline(scenario_id)
+    return {
+        "scenario_id": scenario_id,
+        "name": config["name"],
+        "description": config.get("description", ""),
+        "video_url": f"/case4/video/{scenario_id}?source=ue5",
+        "motive_video_url": f"/case4/video/{scenario_id}?source=motive",
+        "video_exists": config.get("video_file_exists", False),
+        "motive_video_exists": config.get("motive_video_file_exists", False),
+        "timeline_nodes": config["timeline_nodes"],
+        "score_weights": config.get("score_weights", {}),
+    }
+
+
+@app.get("/case4/video/{scenario_id}")
+async def case4_stream_video(scenario_id: str, source: str = "ue5", request: Request = None):
+    import re as _re
+    config = get_video_timeline(scenario_id)
+    video_path = config.get("motive_video_file") if source == "motive" else config.get("video_file")
+    if not video_path or not os.path.exists(video_path):
+        raise HTTPException(404, "Video not found")
+    file_size = os.path.getsize(video_path)
+    range_header = request.headers.get("range") if request else None
+    if range_header:
+        match = _re.match(r'bytes=(\d+)-(\d*)', range_header)
+        if match:
+            start = int(match.group(1))
+            end = int(match.group(2)) if match.group(2) else file_size - 1
+            chunk = end - start + 1
+            def _iter():
+                with open(video_path, "rb") as f:
+                    f.seek(start)
+                    rem = chunk
+                    while rem > 0:
+                        buf = f.read(min(65536, rem))
+                        if not buf:
+                            break
+                        rem -= len(buf)
+                        yield buf
+            return StreamingResponse(_iter(), status_code=206, headers={
+                "Content-Range": f"bytes {start}-{end}/{file_size}",
+                "Accept-Ranges": "bytes", "Content-Length": str(chunk),
+                "Content-Type": "video/mp4",
+            })
+    return FileResponse(video_path, media_type="video/mp4")
+
+
+@app.post("/case4/complete_action")
+async def case4_complete_action(
+    scenario: str = Form(...),
+    action_id: int = Form(...),
+    completed_count: int = Form(0),
+    total_actions: int = Form(8),
+):
+    config = get_scenario(scenario)
+    network_step = None
+    for cs in config["core_network_steps"]:
+        if cs["trigger_action"] == action_id:
+            network_step = cs["step"]
+            break
+    if network_step:
+        _core_net_status[network_step] = "connected"
+    action_score = round(100 * completed_count / total_actions, 2) if total_actions > 0 else 0
+    process_score = round(90.0 + 10.0 * completed_count / total_actions, 2) if total_actions > 0 else 0
+    network_recovered = sum(1 for v in _core_net_status.values() if v == "connected")
+    network_score = round(100 * network_recovered / len(_core_net_status), 2)
+    synergy_score = round(min(100, 80 * completed_count / total_actions + 20), 2) if total_actions > 0 else 20
+    weights = {"earthquake": {"a": 0.25, "p": 0.20, "n": 0.35, "s": 0.20},
+               "fire": {"a": 0.20, "p": 0.15, "n": 0.25, "s": 0.40}}
+    w = weights.get(scenario, weights["earthquake"])
+    total_score = round(w["a"] * action_score + w["p"] * min(process_score, 100) +
+                        w["n"] * network_score + w["s"] * synergy_score, 2)
+    return {
+        "action_id": action_id,
+        "completed_count": completed_count,
+        "network_step": network_step,
+        "network_status": dict(_core_net_status),
+        "scores": {"total": total_score, "action": action_score,
+                   "process": min(process_score, 100), "network": network_score, "synergy": synergy_score}
+    }
+
+
+@app.post("/case4/reset_drill")
+async def case4_reset_drill():
+    for key in _core_net_status:
+        _core_net_status[key] = "disconnected"
+    return {"status": "reset", "network": dict(_core_net_status)}
 
 
 # ──── CENI Simulation (Case 2) ────
@@ -718,6 +808,74 @@ async def case1_quality_comparison():
         raise HTTPException(404, "Comparison data not found")
     with open(comp_path, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+# ──── Video Serving (shared across cases) ────
+
+VIDEO_BASE_DIR = os.path.join(BASE_DIR, "..", "data", "数据")
+
+
+@app.get("/video/{case_id}/{filename:path}")
+async def serve_video(case_id: str, filename: str, request: Request):
+    import re as _re
+    video_path = os.path.join(VIDEO_BASE_DIR, case_id, filename)
+    if not os.path.exists(video_path):
+        raise HTTPException(404, f"Video not found: {case_id}/{filename}")
+    file_size = os.path.getsize(video_path)
+    range_header = request.headers.get("range")
+    if range_header:
+        match = _re.match(r'bytes=(\d+)-(\d*)', range_header)
+        if match:
+            start = int(match.group(1))
+            end = int(match.group(2)) if match.group(2) else file_size - 1
+            chunk = end - start + 1
+            def _iter():
+                with open(video_path, "rb") as f:
+                    f.seek(start)
+                    rem = chunk
+                    while rem > 0:
+                        buf = f.read(min(65536, rem))
+                        if not buf:
+                            break
+                        rem -= len(buf)
+                        yield buf
+            return StreamingResponse(_iter(), status_code=206, headers={
+                "Content-Range": f"bytes {start}-{end}/{file_size}",
+                "Accept-Ranges": "bytes", "Content-Length": str(chunk),
+                "Content-Type": "video/mp4",
+            })
+    return FileResponse(video_path, media_type="video/mp4")
+
+
+# ──── Case 3: Virtual Studio (reuse Case 1 KTK analysis) ────
+
+@app.get("/case3/info", response_class=HTMLResponse)
+async def case3_info():
+    html_path = os.path.join(BASE_DIR, "server", "static", "case3_info.html")
+    return FileResponse(html_path)
+
+
+@app.get("/case3/quality_summary")
+async def case3_quality_summary():
+    return await case1_quality_summary()
+
+
+@app.get("/case3/joint_metrics")
+async def case3_joint_metrics():
+    return await case1_joint_metrics()
+
+
+@app.get("/case3/quality_comparison")
+async def case3_quality_comparison():
+    return await case1_quality_comparison()
+
+
+@app.get("/case3/trajectory_comparison")
+async def case3_trajectory_comparison():
+    img_path = os.path.join(BASE_DIR, "server", "static", "case1_trajectory_comparison.png")
+    if os.path.exists(img_path):
+        return FileResponse(img_path, media_type="image/png")
+    raise HTTPException(404, "Trajectory comparison image not found")
 
 
 # ──── Root ────

@@ -271,10 +271,26 @@ body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;backgroun
   <!-- Demo -->
   <div class="section">
     <h2>实验演示</h2>
-    <div class="demo-video">
-      <div class="play-icon">▶</div>
-      <p>虚拟演播全流程演示视频将在此展示</p>
-      <p style="font-size:11px;color:#445;margin-top:4px">含：动捕驱动 + 机位切换 + AI 脚本执行</p>
+    <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+      <button onclick="loadVideo('ue5')" style="padding:6px 16px;background:#4472C4;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">UE5 虚拟演播场景</button>
+      <button onclick="loadVideo('motive')" style="padding:6px 16px;background:#27ae60;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">Motive 骨骼追踪</button>
+    </div>
+    <video id="demoPlayer" controls style="width:100%;max-width:800px;border-radius:8px;display:none;background:#000;margin:0 auto"></video>
+    <p id="videoHint" style="text-align:center;font-size:13px;color:#667;margin-top:8px">点击上方按钮加载演示视频</p>
+
+    <div class="screenshot-grid" style="margin-top:16px">
+      <div style="background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;overflow:hidden">
+        <video controls preload="metadata" style="width:100%;display:block">
+          <source src="/video/案例4/案例4数字人/Motive_Body 3.2.0.2 Final 2026-05-26 19-33-49.mp4" type="video/mp4">
+        </video>
+        <div style="padding:8px 12px;font-size:12px;color:#8899aa;text-align:center">Motive 骨骼跟踪 — 健美操采集</div>
+      </div>
+      <div style="background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;overflow:hidden">
+        <video controls preload="metadata" style="width:100%;display:block">
+          <source src="/video/案例4/我的项目 - 虚幻编辑器 2026-05-26 19-33-38.mp4" type="video/mp4">
+        </video>
+        <div style="padding:8px 12px;font-size:12px;color:#8899aa;text-align:center">UE5 虚拟演播场景 — 数字人驱动</div>
+      </div>
     </div>
 
     <div class="step">
@@ -307,10 +323,137 @@ body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;backgroun
     </div>
   </div>
 
+  <!-- Motion Capture Quality Analysis (Kinetics Toolkit) -->
+  <div class="section">
+    <h2>动捕数据质量分析 <span style="font-size:12px;color:#667;font-weight:400;margin-left:8px">基于 Kinetics Toolkit — 健美操数据正常/异常对比</span></h2>
+
+    <div class="metric-row" id="qualitySummary">
+      <div class="metric"><div class="val" id="qFrames">--</div><div class="label">采集帧数</div></div>
+      <div class="metric"><div class="val" id="qDuration">--</div><div class="label">时长(秒)</div></div>
+      <div class="metric"><div class="val" id="qRate">--</div><div class="label">采样率(Hz)</div></div>
+      <div class="metric"><div class="val" id="qOk" style="color:#27ae60">--</div><div class="label">OK 关节</div></div>
+      <div class="metric"><div class="val" id="qWarn" style="color:#f39c12">--</div><div class="label">Warning 关节</div></div>
+      <div class="metric"><div class="val" id="qPoor" style="color:#e74c3c">--</div><div class="label">Poor 关节</div></div>
+    </div>
+
+    <h3>关键关节质量指标</h3>
+    <div style="overflow-x:auto;margin:12px 0">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:#0d1b2a">
+            <th style="padding:8px 12px;text-align:left;color:#7ec8e3">关节</th>
+            <th style="padding:8px 12px;text-align:center;color:#7ec8e3">质量</th>
+            <th style="padding:8px 12px;text-align:right;color:#7ec8e3">RMS抖动(mm)</th>
+            <th style="padding:8px 12px;text-align:right;color:#7ec8e3">最大跳跃(mm)</th>
+            <th style="padding:8px 12px;text-align:right;color:#7ec8e3">缺失率(%)</th>
+          </tr>
+        </thead>
+        <tbody id="jointTableBody"></tbody>
+      </table>
+    </div>
+
+    <h3>动捕质量对比 — 正常 vs 异常条件</h3>
+    <div class="metric-row" id="compSummary"></div>
+    <div style="overflow-x:auto;margin:12px 0">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:#0d1b2a">
+            <th style="padding:8px 12px;text-align:left;color:#7ec8e3">数据集</th>
+            <th style="padding:8px 12px;text-align:center;color:#27ae60">OK</th>
+            <th style="padding:8px 12px;text-align:center;color:#f39c12">Warning</th>
+            <th style="padding:8px 12px;text-align:center;color:#e74c3c">Poor</th>
+            <th style="padding:8px 12px;text-align:right;color:#7ec8e3">最差RMS(mm)</th>
+            <th style="padding:8px 12px;text-align:right;color:#7ec8e3">最差跳跃(mm)</th>
+          </tr>
+        </thead>
+        <tbody id="compTableBody"></tbody>
+      </table>
+    </div>
+
+    <h3>质量指标对比图</h3>
+    <div style="margin:12px 0"><img src="/static/case1_quality_comparison.png" style="width:100%;border-radius:8px"></div>
+
+    <h3>右腕 X 轨迹对比</h3>
+    <div style="margin:12px 0"><img src="/static/case1_trajectory_comparison.png" style="width:100%;border-radius:8px"></div>
+
+    <h3>RMS 抖动排名</h3>
+    <div style="margin:12px 0"><img src="/static/dance_key_joint_rms_jitter_rank.png" style="width:100%;max-width:800px;border-radius:8px"></div>
+  </div>
+
 </div>
 
 <div class="footer">
   动捕视频采集与传输实验 &copy; 2026 &nbsp;|&nbsp; <a href="/" style="color:#4472C4;text-decoration:none">返回首页</a>
 </div>
+<script>
+var videoMap = {
+  ue5: '/video/案例4/我的项目 - 虚幻编辑器 2026-05-26 19-33-38.mp4',
+  motive: '/video/案例4/案例4数字人/Motive_Body 3.2.0.2 Final 2026-05-26 19-33-49.mp4'
+};
+function loadVideo(key) {
+  var v = document.getElementById('demoPlayer');
+  v.src = videoMap[key]; v.style.display = 'block'; v.play();
+  document.getElementById('videoHint').style.display = 'none';
+}
+
+async function loadQualityData() {
+  try {
+    var summary = await (await fetch('/case3/quality_summary')).json();
+    document.getElementById('qFrames').textContent = summary.frames;
+    document.getElementById('qDuration').textContent = summary.duration_s;
+    document.getElementById('qRate').textContent = parseFloat(summary.sample_rate_hz).toFixed(0);
+    document.getElementById('qOk').textContent = summary.ok_major_key_joints;
+    document.getElementById('qWarn').textContent = summary.warning_major_key_joints;
+    document.getElementById('qPoor').textContent = summary.poor_major_key_joints;
+    var joints = await (await fetch('/case3/joint_metrics')).json();
+    var tbody = document.getElementById('jointTableBody');
+    tbody.innerHTML = '';
+    joints.forEach(function(j) {
+      var flagColor = j.quality_flag === 'ok' ? '#27ae60' : j.quality_flag === 'warning' ? '#f39c12' : '#e74c3c';
+      var flagBg = j.quality_flag === 'ok' ? 'rgba(39,174,96,.12)' : j.quality_flag === 'warning' ? 'rgba(243,156,18,.12)' : 'rgba(231,76,60,.12)';
+      var tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid #1a2a40';
+      tr.innerHTML =
+        '<td style="padding:8px 12px;color:#e0e0e0">' + j.joint + '</td>' +
+        '<td style="padding:8px 12px;text-align:center"><span style="padding:3px 10px;border-radius:4px;background:' + flagBg + ';color:' + flagColor + ';font-weight:600;font-size:11px">' + j.quality_flag.toUpperCase() + '</span></td>' +
+        '<td style="padding:8px 12px;text-align:right;color:' + (j.rms_jitter_mm > 20 ? '#f39c12' : '#e0e0e0') + '">' + j.rms_jitter_mm.toFixed(1) + '</td>' +
+        '<td style="padding:8px 12px;text-align:right;color:' + (j.max_instantaneous_jump_mm > 200 ? '#e74c3c' : '#e0e0e0') + '">' + j.max_instantaneous_jump_mm.toFixed(1) + '</td>' +
+        '<td style="padding:8px 12px;text-align:right;color:' + (j.missing_percent > 2 ? '#f39c12' : '#e0e0e0') + '">' + j.missing_percent.toFixed(1) + '</td>';
+      tbody.appendChild(tr);
+    });
+  } catch(e) { console.error('Quality data error:', e); }
+}
+
+async function loadComparisonData() {
+  try {
+    var data = await (await fetch('/case3/quality_comparison')).json();
+    var keys = Object.keys(data);
+    var summaryEl = document.getElementById('compSummary');
+    summaryEl.innerHTML = '';
+    keys.forEach(function(k) {
+      var s = data[k].summary;
+      var border = k.indexOf('正常') >= 0 ? '#27ae60' : k.indexOf('遮挡') >= 0 ? '#f39c12' : k.indexOf('少') >= 0 ? '#e74c3c' : '#e67e22';
+      summaryEl.innerHTML += '<div class="metric" style="border:2px solid ' + border + ';border-radius:8px"><div class="val" style="font-size:16px;color:' + border + '">' + k + '</div><div style="font-size:12px;margin-top:4px"><span style="color:#27ae60">' + s.ok + ' OK</span> <span style="color:#f39c12">' + s.warning + ' W</span> <span style="color:#e74c3c">' + s.poor + ' P</span></div></div>';
+    });
+    var tbody = document.getElementById('compTableBody');
+    tbody.innerHTML = '';
+    keys.forEach(function(k) {
+      var s = data[k].summary;
+      var tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid #1a2a40';
+      tr.innerHTML =
+        '<td style="padding:8px 12px;color:#e0e0e0;font-weight:600">' + k + '</td>' +
+        '<td style="padding:8px 12px;text-align:center;color:#27ae60;font-weight:600">' + s.ok + '</td>' +
+        '<td style="padding:8px 12px;text-align:center;color:#f39c12;font-weight:600">' + s.warning + '</td>' +
+        '<td style="padding:8px 12px;text-align:center;color:#e74c3c;font-weight:600">' + s.poor + '</td>' +
+        '<td style="padding:8px 12px;text-align:right;color:#e0e0e0">' + s.worst_rms_mm.toFixed(1) + ' (' + s.worst_rms_joint + ')</td>' +
+        '<td style="padding:8px 12px;text-align:right;color:#e0e0e0">' + s.worst_jump_mm.toFixed(1) + ' (' + s.worst_jump_joint + ')</td>';
+      tbody.appendChild(tr);
+    });
+  } catch(e) { console.error('Comparison data error:', e); }
+}
+loadQualityData();
+loadComparisonData();
+</script>
 </body>
 </html>
