@@ -3,119 +3,166 @@
     "summary": {
       "label": "正常(最佳标定)",
       "sample_rate": 120.0,
-      "joints_analyzed": 15,
-      "ok": 15,
+      "joints_analyzed": 22,
+      "ok": 22,
       "warning": 0,
       "poor": 0,
-      "worst_rms_joint": "LWrist",
-      "worst_rms_mm": 4.5,
-      "worst_jump_joint": "RKnee",
-      "worst_jump_mm": 126.3
+      "worst_rms_mm": 8.017805878084507,
+      "worst_jump_mm": 96.03305703992278
     },
     "joints": {
-      "LWrist": {
-        "rms_jitter_mm": 4.5,
-        "max_jump_mm": 40.8,
+      "Ab": {
+        "rms_jitter_mm": 1.637801198710077,
+        "max_jump_mm": 15.726572442101384,
         "missing_percent": 0.0,
-        "max_jump_frame": 7190,
-        "quality": "ok"
-      },
-      "RWrist": {
-        "rms_jitter_mm": 4.1,
-        "max_jump_mm": 41.1,
-        "missing_percent": 0.0,
-        "max_jump_frame": 6693,
-        "quality": "ok"
-      },
-      "LElbow": {
-        "rms_jitter_mm": 2.9,
-        "max_jump_mm": 78.4,
-        "missing_percent": 0.6,
-        "max_jump_frame": 408,
-        "quality": "ok"
-      },
-      "RElbow": {
-        "rms_jitter_mm": 2.1,
-        "max_jump_mm": 21.8,
-        "missing_percent": 0.0,
-        "max_jump_frame": 3331,
-        "quality": "ok"
-      },
-      "LShoulder": {
-        "rms_jitter_mm": 0.9,
-        "max_jump_mm": 14.4,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1726,
-        "quality": "ok"
-      },
-      "RShoulder": {
-        "rms_jitter_mm": 0.9,
-        "max_jump_mm": 14.3,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1726,
-        "quality": "ok"
-      },
-      "LHip": {
-        "rms_jitter_mm": 2.8,
-        "max_jump_mm": 64.2,
-        "missing_percent": 0.0,
-        "max_jump_frame": 531,
-        "quality": "ok"
-      },
-      "RHip": {
-        "rms_jitter_mm": 2.4,
-        "max_jump_mm": 96.0,
-        "missing_percent": 0.0,
-        "max_jump_frame": 5992,
-        "quality": "ok"
-      },
-      "LKnee": {
-        "rms_jitter_mm": 2.0,
-        "max_jump_mm": 60.3,
-        "missing_percent": 0.3,
-        "max_jump_frame": 5260,
-        "quality": "ok"
-      },
-      "RKnee": {
-        "rms_jitter_mm": 1.9,
-        "max_jump_mm": 126.3,
-        "missing_percent": 0.2,
-        "max_jump_frame": 6947,
-        "quality": "ok"
-      },
-      "LAnkle": {
-        "rms_jitter_mm": 2.3,
-        "max_jump_mm": 28.7,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1730,
-        "quality": "ok"
-      },
-      "RAnkle": {
-        "rms_jitter_mm": 2.4,
-        "max_jump_mm": 30.4,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1692,
-        "quality": "ok"
-      },
-      "Head": {
-        "rms_jitter_mm": 0.8,
-        "max_jump_mm": 13.5,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1726,
-        "quality": "ok"
-      },
-      "Neck": {
-        "rms_jitter_mm": 0.9,
-        "max_jump_mm": 14.2,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1726,
+        "max_jump_frame": 1715,
         "quality": "ok"
       },
       "Chest": {
-        "rms_jitter_mm": 0.9,
-        "max_jump_mm": 15.0,
+        "rms_jitter_mm": 1.5583423468846278,
+        "max_jump_mm": 14.973861595706738,
         "missing_percent": 0.0,
-        "max_jump_frame": 3679,
+        "max_jump_frame": 3680,
+        "quality": "ok"
+      },
+      "Neck": {
+        "rms_jitter_mm": 1.5614575517061418,
+        "max_jump_mm": 14.189598561087658,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1727,
+        "quality": "ok"
+      },
+      "Head": {
+        "rms_jitter_mm": 1.3627774271508273,
+        "max_jump_mm": 13.547736208336872,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1727,
+        "quality": "ok"
+      },
+      "LShoulder": {
+        "rms_jitter_mm": 1.5817963396015857,
+        "max_jump_mm": 14.398937488271784,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1727,
+        "quality": "ok"
+      },
+      "LElbow": {
+        "rms_jitter_mm": 5.366140850533225,
+        "max_jump_mm": 77.15455450822893,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3480,
+        "quality": "ok"
+      },
+      "LWrist": {
+        "rms_jitter_mm": 7.850252335451424,
+        "max_jump_mm": 40.83732902752438,
+        "missing_percent": 0.0,
+        "max_jump_frame": 7191,
+        "quality": "ok"
+      },
+      "LHand": {
+        "rms_jitter_mm": 8.017805878084507,
+        "max_jump_mm": 41.50708655635314,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6020,
+        "quality": "ok"
+      },
+      "RShoulder": {
+        "rms_jitter_mm": 1.542978799506121,
+        "max_jump_mm": 14.289122291727395,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1727,
+        "quality": "ok"
+      },
+      "RElbow": {
+        "rms_jitter_mm": 4.100938019542359,
+        "max_jump_mm": 26.393030524369884,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6694,
+        "quality": "ok"
+      },
+      "RWrist": {
+        "rms_jitter_mm": 7.151498387916143,
+        "max_jump_mm": 41.07516225866962,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6694,
+        "quality": "ok"
+      },
+      "RHand": {
+        "rms_jitter_mm": 7.117017952255547,
+        "max_jump_mm": 40.902738301880774,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6694,
+        "quality": "ok"
+      },
+      "LHip": {
+        "rms_jitter_mm": 4.891953985661168,
+        "max_jump_mm": 64.23435211031047,
+        "missing_percent": 0.0,
+        "max_jump_frame": 532,
+        "quality": "ok"
+      },
+      "LKnee": {
+        "rms_jitter_mm": 3.388295620176431,
+        "max_jump_mm": 72.20240613484901,
+        "missing_percent": 0.0,
+        "max_jump_frame": 5283,
+        "quality": "ok"
+      },
+      "LAnkle": {
+        "rms_jitter_mm": 4.028266105262781,
+        "max_jump_mm": 28.736668578568764,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1731,
+        "quality": "ok"
+      },
+      "LFoot": {
+        "rms_jitter_mm": 3.4485473689466866,
+        "max_jump_mm": 28.79154084554816,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1729,
+        "quality": "ok"
+      },
+      "LToe": {
+        "rms_jitter_mm": 4.380327391544247,
+        "max_jump_mm": 34.65122677907525,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1734,
+        "quality": "ok"
+      },
+      "RHip": {
+        "rms_jitter_mm": 4.215832446827723,
+        "max_jump_mm": 96.03305703992278,
+        "missing_percent": 0.0,
+        "max_jump_frame": 5993,
+        "quality": "ok"
+      },
+      "RKnee": {
+        "rms_jitter_mm": 3.0591001509018114,
+        "max_jump_mm": 63.27792453492818,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6963,
+        "quality": "ok"
+      },
+      "RAnkle": {
+        "rms_jitter_mm": 4.243269920572244,
+        "max_jump_mm": 30.37989679306396,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1693,
+        "quality": "ok"
+      },
+      "RFoot": {
+        "rms_jitter_mm": 3.650271700822669,
+        "max_jump_mm": 29.14935453826721,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1689,
+        "quality": "ok"
+      },
+      "RToe": {
+        "rms_jitter_mm": 4.159701981090132,
+        "max_jump_mm": 32.20034105902251,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1689,
         "quality": "ok"
       }
     }
@@ -124,119 +171,173 @@
     "summary": {
       "label": "标定结果差",
       "sample_rate": 120.0,
-      "joints_analyzed": 15,
-      "ok": 13,
-      "warning": 2,
+      "joints_analyzed": 23,
+      "ok": 23,
+      "warning": 0,
       "poor": 0,
-      "worst_rms_joint": "LWrist",
-      "worst_rms_mm": 4.2,
-      "worst_jump_joint": "LKnee",
-      "worst_jump_mm": 341.3
+      "worst_rms_mm": 7.246764576271375,
+      "worst_jump_mm": 134.84317444486666
     },
     "joints": {
-      "LWrist": {
-        "rms_jitter_mm": 4.2,
-        "max_jump_mm": 68.2,
+      "Skeleton_002": {
+        "rms_jitter_mm": 1.622941463258752,
+        "max_jump_mm": 14.607638662304227,
         "missing_percent": 0.0,
-        "max_jump_frame": 1526,
+        "max_jump_frame": 1691,
         "quality": "ok"
       },
-      "RWrist": {
-        "rms_jitter_mm": 4.0,
-        "max_jump_mm": 73.3,
+      "Ab": {
+        "rms_jitter_mm": 1.6013696641762047,
+        "max_jump_mm": 14.795542604997724,
         "missing_percent": 0.0,
-        "max_jump_frame": 1521,
+        "max_jump_frame": 1691,
         "quality": "ok"
       },
-      "LElbow": {
-        "rms_jitter_mm": 2.7,
-        "max_jump_mm": 50.9,
+      "Chest": {
+        "rms_jitter_mm": 1.6535108578767228,
+        "max_jump_mm": 14.45815593165025,
         "missing_percent": 0.0,
-        "max_jump_frame": 6119,
+        "max_jump_frame": 1691,
         "quality": "ok"
       },
-      "RElbow": {
-        "rms_jitter_mm": 2.5,
-        "max_jump_mm": 27.3,
+      "Neck": {
+        "rms_jitter_mm": 1.6771311368810016,
+        "max_jump_mm": 17.60295067732603,
         "missing_percent": 0.0,
-        "max_jump_frame": 1283,
+        "max_jump_frame": 771,
+        "quality": "ok"
+      },
+      "Head": {
+        "rms_jitter_mm": 1.461953177259544,
+        "max_jump_mm": 39.50180385805541,
+        "missing_percent": 0.0,
+        "max_jump_frame": 771,
         "quality": "ok"
       },
       "LShoulder": {
-        "rms_jitter_mm": 1.0,
-        "max_jump_mm": 19.9,
+        "rms_jitter_mm": 1.7328052178533322,
+        "max_jump_mm": 19.930476414025804,
         "missing_percent": 0.0,
-        "max_jump_frame": 770,
+        "max_jump_frame": 771,
+        "quality": "ok"
+      },
+      "LElbow": {
+        "rms_jitter_mm": 4.899718750056642,
+        "max_jump_mm": 82.4947506550922,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1499,
+        "quality": "ok"
+      },
+      "LWrist": {
+        "rms_jitter_mm": 7.246764576271375,
+        "max_jump_mm": 68.1628232378979,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1527,
+        "quality": "ok"
+      },
+      "LHand": {
+        "rms_jitter_mm": 7.225946704660627,
+        "max_jump_mm": 37.33381110401748,
+        "missing_percent": 0.0,
+        "max_jump_frame": 4831,
         "quality": "ok"
       },
       "RShoulder": {
-        "rms_jitter_mm": 0.9,
-        "max_jump_mm": 14.2,
+        "rms_jitter_mm": 1.6327188833340658,
+        "max_jump_mm": 14.209906494962864,
         "missing_percent": 0.0,
-        "max_jump_frame": 4848,
+        "max_jump_frame": 4849,
+        "quality": "ok"
+      },
+      "RElbow": {
+        "rms_jitter_mm": 4.315114292640694,
+        "max_jump_mm": 27.33786499755851,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6734,
+        "quality": "ok"
+      },
+      "RWrist": {
+        "rms_jitter_mm": 6.892489848827039,
+        "max_jump_mm": 73.31786122053143,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1522,
+        "quality": "ok"
+      },
+      "RHand": {
+        "rms_jitter_mm": 6.7737826247393835,
+        "max_jump_mm": 40.37254870773025,
+        "missing_percent": 0.0,
+        "max_jump_frame": 4123,
         "quality": "ok"
       },
       "LHip": {
-        "rms_jitter_mm": 3.0,
-        "max_jump_mm": 61.7,
+        "rms_jitter_mm": 5.130709841634506,
+        "max_jump_mm": 61.68921542052456,
         "missing_percent": 0.0,
-        "max_jump_frame": 6126,
-        "quality": "ok"
-      },
-      "RHip": {
-        "rms_jitter_mm": 2.0,
-        "max_jump_mm": 67.8,
-        "missing_percent": 0.0,
-        "max_jump_frame": 6702,
+        "max_jump_frame": 6127,
         "quality": "ok"
       },
       "LKnee": {
-        "rms_jitter_mm": 2.2,
-        "max_jump_mm": 341.3,
-        "missing_percent": 2.6,
-        "max_jump_frame": 5209,
-        "quality": "warning"
-      },
-      "RKnee": {
-        "rms_jitter_mm": 2.1,
-        "max_jump_mm": 235.9,
-        "missing_percent": 1.7,
-        "max_jump_frame": 7045,
-        "quality": "warning"
+        "rms_jitter_mm": 4.63562212518122,
+        "max_jump_mm": 134.84317444486666,
+        "missing_percent": 0.0,
+        "max_jump_frame": 5143,
+        "quality": "ok"
       },
       "LAnkle": {
-        "rms_jitter_mm": 2.2,
-        "max_jump_mm": 30.7,
+        "rms_jitter_mm": 3.7430890687340956,
+        "max_jump_mm": 30.67596831583072,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1707,
+        "quality": "ok"
+      },
+      "LFoot": {
+        "rms_jitter_mm": 3.378580768288995,
+        "max_jump_mm": 30.35090712959118,
         "missing_percent": 0.0,
         "max_jump_frame": 1706,
         "quality": "ok"
       },
+      "LToe": {
+        "rms_jitter_mm": 4.011192434130435,
+        "max_jump_mm": 35.131435490360914,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1706,
+        "quality": "ok"
+      },
+      "RHip": {
+        "rms_jitter_mm": 3.5132031287076155,
+        "max_jump_mm": 67.80783635633424,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6703,
+        "quality": "ok"
+      },
+      "RKnee": {
+        "rms_jitter_mm": 3.5533275124644113,
+        "max_jump_mm": 92.93388515428018,
+        "missing_percent": 0.0,
+        "max_jump_frame": 7057,
+        "quality": "ok"
+      },
       "RAnkle": {
-        "rms_jitter_mm": 2.4,
-        "max_jump_mm": 47.3,
+        "rms_jitter_mm": 4.130876985410672,
+        "max_jump_mm": 47.30303276367456,
         "missing_percent": 0.0,
-        "max_jump_frame": 6213,
+        "max_jump_frame": 6214,
         "quality": "ok"
       },
-      "Head": {
-        "rms_jitter_mm": 0.8,
-        "max_jump_mm": 39.5,
+      "RFoot": {
+        "rms_jitter_mm": 3.6103218433482502,
+        "max_jump_mm": 30.633393147978353,
         "missing_percent": 0.0,
-        "max_jump_frame": 770,
+        "max_jump_frame": 1665,
         "quality": "ok"
       },
-      "Neck": {
-        "rms_jitter_mm": 1.0,
-        "max_jump_mm": 17.6,
+      "RToe": {
+        "rms_jitter_mm": 4.011355835464595,
+        "max_jump_mm": 32.99297525226833,
         "missing_percent": 0.0,
-        "max_jump_frame": 770,
-        "quality": "ok"
-      },
-      "Chest": {
-        "rms_jitter_mm": 1.0,
-        "max_jump_mm": 14.5,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1690,
+        "max_jump_frame": 1665,
         "quality": "ok"
       }
     }
@@ -245,119 +346,173 @@
     "summary": {
       "label": "少两个标记点",
       "sample_rate": 120.0,
-      "joints_analyzed": 15,
-      "ok": 11,
-      "warning": 2,
-      "poor": 2,
-      "worst_rms_joint": "LElbow",
-      "worst_rms_mm": 4.8,
-      "worst_jump_joint": "LElbow",
-      "worst_jump_mm": 1255.7
+      "joints_analyzed": 23,
+      "ok": 23,
+      "warning": 0,
+      "poor": 0,
+      "worst_rms_mm": 7.442753164967306,
+      "worst_jump_mm": 125.0328302630597
     },
     "joints": {
-      "LWrist": {
-        "rms_jitter_mm": 4.3,
-        "max_jump_mm": 67.8,
+      "Skeleton_002": {
+        "rms_jitter_mm": 1.7247480100400203,
+        "max_jump_mm": 27.46529376106544,
         "missing_percent": 0.0,
-        "max_jump_frame": 5713,
+        "max_jump_frame": 3689,
         "quality": "ok"
       },
-      "RWrist": {
-        "rms_jitter_mm": 4.0,
-        "max_jump_mm": 40.3,
+      "Ab": {
+        "rms_jitter_mm": 1.6922950869760078,
+        "max_jump_mm": 26.64357635310032,
         "missing_percent": 0.0,
-        "max_jump_frame": 4198,
-        "quality": "ok"
-      },
-      "LElbow": {
-        "rms_jitter_mm": 4.8,
-        "max_jump_mm": 1255.7,
-        "missing_percent": 99.5,
-        "max_jump_frame": 4,
-        "quality": "poor"
-      },
-      "RElbow": {
-        "rms_jitter_mm": 0.7,
-        "max_jump_mm": 1032.0,
-        "missing_percent": 99.9,
-        "max_jump_frame": 1,
-        "quality": "poor"
-      },
-      "LShoulder": {
-        "rms_jitter_mm": 1.0,
-        "max_jump_mm": 16.0,
-        "missing_percent": 0.0,
-        "max_jump_frame": 3688,
-        "quality": "ok"
-      },
-      "RShoulder": {
-        "rms_jitter_mm": 0.9,
-        "max_jump_mm": 16.2,
-        "missing_percent": 0.0,
-        "max_jump_frame": 3688,
-        "quality": "ok"
-      },
-      "LHip": {
-        "rms_jitter_mm": 2.5,
-        "max_jump_mm": 58.1,
-        "missing_percent": 0.0,
-        "max_jump_frame": 2443,
-        "quality": "ok"
-      },
-      "RHip": {
-        "rms_jitter_mm": 2.2,
-        "max_jump_mm": 69.2,
-        "missing_percent": 0.0,
-        "max_jump_frame": 2936,
-        "quality": "ok"
-      },
-      "LKnee": {
-        "rms_jitter_mm": 2.1,
-        "max_jump_mm": 463.1,
-        "missing_percent": 4.7,
-        "max_jump_frame": 5640,
-        "quality": "warning"
-      },
-      "RKnee": {
-        "rms_jitter_mm": 2.0,
-        "max_jump_mm": 297.5,
-        "missing_percent": 1.6,
-        "max_jump_frame": 7085,
-        "quality": "warning"
-      },
-      "LAnkle": {
-        "rms_jitter_mm": 2.2,
-        "max_jump_mm": 28.5,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1732,
-        "quality": "ok"
-      },
-      "RAnkle": {
-        "rms_jitter_mm": 2.4,
-        "max_jump_mm": 30.2,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1685,
-        "quality": "ok"
-      },
-      "Head": {
-        "rms_jitter_mm": 0.8,
-        "max_jump_mm": 13.4,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1726,
-        "quality": "ok"
-      },
-      "Neck": {
-        "rms_jitter_mm": 0.9,
-        "max_jump_mm": 14.5,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1726,
+        "max_jump_frame": 3689,
         "quality": "ok"
       },
       "Chest": {
-        "rms_jitter_mm": 1.0,
-        "max_jump_mm": 21.6,
+        "rms_jitter_mm": 1.6923695671297914,
+        "max_jump_mm": 21.606117276618455,
         "missing_percent": 0.0,
-        "max_jump_frame": 3688,
+        "max_jump_frame": 3689,
+        "quality": "ok"
+      },
+      "Neck": {
+        "rms_jitter_mm": 1.5869834827844755,
+        "max_jump_mm": 14.471514250258416,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1727,
+        "quality": "ok"
+      },
+      "Head": {
+        "rms_jitter_mm": 1.3327182404777156,
+        "max_jump_mm": 13.36292356184762,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1727,
+        "quality": "ok"
+      },
+      "LShoulder": {
+        "rms_jitter_mm": 1.675968640078808,
+        "max_jump_mm": 16.003632273472537,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3689,
+        "quality": "ok"
+      },
+      "LElbow": {
+        "rms_jitter_mm": 7.245424835933056,
+        "max_jump_mm": 125.0328302630597,
+        "missing_percent": 0.0,
+        "max_jump_frame": 2809,
+        "quality": "ok"
+      },
+      "LWrist": {
+        "rms_jitter_mm": 7.442753164967306,
+        "max_jump_mm": 67.78966006602309,
+        "missing_percent": 0.0,
+        "max_jump_frame": 5714,
+        "quality": "ok"
+      },
+      "LHand": {
+        "rms_jitter_mm": 7.183405157614857,
+        "max_jump_mm": 39.897718782486564,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6067,
+        "quality": "ok"
+      },
+      "RShoulder": {
+        "rms_jitter_mm": 1.5925971337993299,
+        "max_jump_mm": 16.21369023811599,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3689,
+        "quality": "ok"
+      },
+      "RElbow": {
+        "rms_jitter_mm": 5.712506825339671,
+        "max_jump_mm": 99.43527899813776,
+        "missing_percent": 0.0,
+        "max_jump_frame": 6478,
+        "quality": "ok"
+      },
+      "RWrist": {
+        "rms_jitter_mm": 6.929722088891258,
+        "max_jump_mm": 40.26706643181649,
+        "missing_percent": 0.0,
+        "max_jump_frame": 4199,
+        "quality": "ok"
+      },
+      "RHand": {
+        "rms_jitter_mm": 6.929542414928856,
+        "max_jump_mm": 40.40623043354035,
+        "missing_percent": 0.0,
+        "max_jump_frame": 4199,
+        "quality": "ok"
+      },
+      "LHip": {
+        "rms_jitter_mm": 4.3478264224178345,
+        "max_jump_mm": 58.1265907098879,
+        "missing_percent": 0.0,
+        "max_jump_frame": 2444,
+        "quality": "ok"
+      },
+      "LKnee": {
+        "rms_jitter_mm": 4.9367778260457555,
+        "max_jump_mm": 120.13439890942882,
+        "missing_percent": 0.0,
+        "max_jump_frame": 5865,
+        "quality": "ok"
+      },
+      "LAnkle": {
+        "rms_jitter_mm": 3.865139692459212,
+        "max_jump_mm": 28.494870384548985,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1733,
+        "quality": "ok"
+      },
+      "LFoot": {
+        "rms_jitter_mm": 3.518889460200589,
+        "max_jump_mm": 28.616958827429876,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1734,
+        "quality": "ok"
+      },
+      "LToe": {
+        "rms_jitter_mm": 4.143378927959907,
+        "max_jump_mm": 36.2968597625632,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1737,
+        "quality": "ok"
+      },
+      "RHip": {
+        "rms_jitter_mm": 3.8067278273683516,
+        "max_jump_mm": 69.20501146595079,
+        "missing_percent": 0.0,
+        "max_jump_frame": 2937,
+        "quality": "ok"
+      },
+      "RKnee": {
+        "rms_jitter_mm": 4.0824079502150115,
+        "max_jump_mm": 95.98185213798546,
+        "missing_percent": 0.0,
+        "max_jump_frame": 7160,
+        "quality": "ok"
+      },
+      "RAnkle": {
+        "rms_jitter_mm": 4.175991247715161,
+        "max_jump_mm": 30.24043303476169,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1686,
+        "quality": "ok"
+      },
+      "RFoot": {
+        "rms_jitter_mm": 3.6479814814975438,
+        "max_jump_mm": 29.023372815836943,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1686,
+        "quality": "ok"
+      },
+      "RToe": {
+        "rms_jitter_mm": 4.039746307008633,
+        "max_jump_mm": 32.9442716796824,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3706,
         "quality": "ok"
       }
     }
@@ -366,119 +521,173 @@
     "summary": {
       "label": "遮挡摄像头",
       "sample_rate": 120.0,
-      "joints_analyzed": 15,
-      "ok": 13,
-      "warning": 2,
+      "joints_analyzed": 23,
+      "ok": 23,
+      "warning": 0,
       "poor": 0,
-      "worst_rms_joint": "LWrist",
-      "worst_rms_mm": 4.6,
-      "worst_jump_joint": "LKnee",
-      "worst_jump_mm": 383.9
+      "worst_rms_mm": 7.950921841470549,
+      "worst_jump_mm": 148.61133717319245
     },
     "joints": {
-      "LWrist": {
-        "rms_jitter_mm": 4.6,
-        "max_jump_mm": 86.9,
+      "Skeleton_002": {
+        "rms_jitter_mm": 1.835910019145507,
+        "max_jump_mm": 51.96382222752718,
         "missing_percent": 0.0,
-        "max_jump_frame": 3063,
+        "max_jump_frame": 3157,
         "quality": "ok"
       },
-      "RWrist": {
-        "rms_jitter_mm": 3.9,
-        "max_jump_mm": 40.7,
+      "Ab": {
+        "rms_jitter_mm": 1.7608056650256259,
+        "max_jump_mm": 47.9389587652916,
         "missing_percent": 0.0,
-        "max_jump_frame": 4179,
-        "quality": "ok"
-      },
-      "LElbow": {
-        "rms_jitter_mm": 2.9,
-        "max_jump_mm": 73.5,
-        "missing_percent": 0.0,
-        "max_jump_frame": 3837,
-        "quality": "ok"
-      },
-      "RElbow": {
-        "rms_jitter_mm": 2.6,
-        "max_jump_mm": 27.2,
-        "missing_percent": 0.0,
-        "max_jump_frame": 5145,
-        "quality": "ok"
-      },
-      "LShoulder": {
-        "rms_jitter_mm": 0.9,
-        "max_jump_mm": 15.3,
-        "missing_percent": 0.0,
-        "max_jump_frame": 3156,
-        "quality": "ok"
-      },
-      "RShoulder": {
-        "rms_jitter_mm": 0.9,
-        "max_jump_mm": 13.0,
-        "missing_percent": 0.0,
-        "max_jump_frame": 3156,
-        "quality": "ok"
-      },
-      "LHip": {
-        "rms_jitter_mm": 3.0,
-        "max_jump_mm": 148.6,
-        "missing_percent": 0.0,
-        "max_jump_frame": 3156,
-        "quality": "ok"
-      },
-      "RHip": {
-        "rms_jitter_mm": 2.3,
-        "max_jump_mm": 54.0,
-        "missing_percent": 0.0,
-        "max_jump_frame": 3713,
-        "quality": "ok"
-      },
-      "LKnee": {
-        "rms_jitter_mm": 2.2,
-        "max_jump_mm": 383.9,
-        "missing_percent": 2.1,
-        "max_jump_frame": 5716,
-        "quality": "warning"
-      },
-      "RKnee": {
-        "rms_jitter_mm": 2.3,
-        "max_jump_mm": 278.1,
-        "missing_percent": 1.7,
-        "max_jump_frame": 6982,
-        "quality": "warning"
-      },
-      "LAnkle": {
-        "rms_jitter_mm": 2.3,
-        "max_jump_mm": 29.3,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1779,
-        "quality": "ok"
-      },
-      "RAnkle": {
-        "rms_jitter_mm": 2.4,
-        "max_jump_mm": 30.5,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1738,
-        "quality": "ok"
-      },
-      "Head": {
-        "rms_jitter_mm": 0.8,
-        "max_jump_mm": 12.5,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1779,
-        "quality": "ok"
-      },
-      "Neck": {
-        "rms_jitter_mm": 0.9,
-        "max_jump_mm": 12.1,
-        "missing_percent": 0.0,
-        "max_jump_frame": 1779,
+        "max_jump_frame": 3157,
         "quality": "ok"
       },
       "Chest": {
-        "rms_jitter_mm": 0.9,
-        "max_jump_mm": 24.1,
+        "rms_jitter_mm": 1.6062573005387604,
+        "max_jump_mm": 24.127110518059318,
         "missing_percent": 0.0,
-        "max_jump_frame": 3156,
+        "max_jump_frame": 3157,
+        "quality": "ok"
+      },
+      "Neck": {
+        "rms_jitter_mm": 1.6256207261521085,
+        "max_jump_mm": 12.113319413262449,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1780,
+        "quality": "ok"
+      },
+      "Head": {
+        "rms_jitter_mm": 1.3649107248825165,
+        "max_jump_mm": 12.546161726148185,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1780,
+        "quality": "ok"
+      },
+      "LShoulder": {
+        "rms_jitter_mm": 1.6426799156820904,
+        "max_jump_mm": 15.25758023115475,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3157,
+        "quality": "ok"
+      },
+      "LElbow": {
+        "rms_jitter_mm": 4.8459122593328265,
+        "max_jump_mm": 40.49549418516947,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3838,
+        "quality": "ok"
+      },
+      "LWrist": {
+        "rms_jitter_mm": 7.950921841470549,
+        "max_jump_mm": 86.87254675233643,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3064,
+        "quality": "ok"
+      },
+      "LHand": {
+        "rms_jitter_mm": 7.374955512275746,
+        "max_jump_mm": 37.059208803554604,
+        "missing_percent": 0.0,
+        "max_jump_frame": 4886,
+        "quality": "ok"
+      },
+      "RShoulder": {
+        "rms_jitter_mm": 1.620227131137096,
+        "max_jump_mm": 12.983767292352002,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3157,
+        "quality": "ok"
+      },
+      "RElbow": {
+        "rms_jitter_mm": 4.410566107738499,
+        "max_jump_mm": 27.6047800667377,
+        "missing_percent": 0.0,
+        "max_jump_frame": 4180,
+        "quality": "ok"
+      },
+      "RWrist": {
+        "rms_jitter_mm": 6.831307000871449,
+        "max_jump_mm": 40.65570618374981,
+        "missing_percent": 0.0,
+        "max_jump_frame": 4180,
+        "quality": "ok"
+      },
+      "RHand": {
+        "rms_jitter_mm": 6.834159949751942,
+        "max_jump_mm": 41.15156113029297,
+        "missing_percent": 0.0,
+        "max_jump_frame": 4180,
+        "quality": "ok"
+      },
+      "LHip": {
+        "rms_jitter_mm": 5.16146007969906,
+        "max_jump_mm": 148.61133717319245,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3157,
+        "quality": "ok"
+      },
+      "LKnee": {
+        "rms_jitter_mm": 4.730165660215846,
+        "max_jump_mm": 124.80778567315666,
+        "missing_percent": 0.0,
+        "max_jump_frame": 5197,
+        "quality": "ok"
+      },
+      "LAnkle": {
+        "rms_jitter_mm": 4.024022786020129,
+        "max_jump_mm": 29.30684518391297,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1780,
+        "quality": "ok"
+      },
+      "LFoot": {
+        "rms_jitter_mm": 3.6551726459815574,
+        "max_jump_mm": 28.583389469287933,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1780,
+        "quality": "ok"
+      },
+      "LToe": {
+        "rms_jitter_mm": 4.462657905796851,
+        "max_jump_mm": 32.42292479095971,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1785,
+        "quality": "ok"
+      },
+      "RHip": {
+        "rms_jitter_mm": 4.02545551687144,
+        "max_jump_mm": 53.95590496168314,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3714,
+        "quality": "ok"
+      },
+      "RKnee": {
+        "rms_jitter_mm": 4.17993041237932,
+        "max_jump_mm": 100.08809347189276,
+        "missing_percent": 0.0,
+        "max_jump_frame": 7161,
+        "quality": "ok"
+      },
+      "RAnkle": {
+        "rms_jitter_mm": 4.1759313501768505,
+        "max_jump_mm": 30.517309278421127,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1739,
+        "quality": "ok"
+      },
+      "RFoot": {
+        "rms_jitter_mm": 3.646839711545524,
+        "max_jump_mm": 28.682611901425226,
+        "missing_percent": 0.0,
+        "max_jump_frame": 1740,
+        "quality": "ok"
+      },
+      "RToe": {
+        "rms_jitter_mm": 4.057921047057384,
+        "max_jump_mm": 31.493384899972074,
+        "missing_percent": 0.0,
+        "max_jump_frame": 3715,
         "quality": "ok"
       }
     }

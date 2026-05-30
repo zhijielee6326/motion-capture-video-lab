@@ -190,19 +190,11 @@ body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;backgroun
   <div class="section">
     <h2>实验演示</h2>
     <h3>正常链路 — 数字人实时跟随</h3>
-    <div class="screenshot-grid">
-      <div style="background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;overflow:hidden">
-        <video controls preload="metadata" style="width:100%;display:block" poster="">
-          <source src="/video/案例4/案例4数字人/Motive_Body 3.2.0.2 Final 2026-05-26 19-33-49.mp4" type="video/mp4">
-        </video>
-        <div style="padding:8px 12px;font-size:12px;color:#8899aa;text-align:center">Motive 骨骼跟踪画面</div>
-      </div>
-      <div style="background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;overflow:hidden">
-        <video controls preload="metadata" style="width:100%;display:block">
-          <source src="/video/案例4/我的项目 - 虚幻编辑器 2026-05-26 19-33-38.mp4" type="video/mp4">
-        </video>
-        <div style="padding:8px 12px;font-size:12px;color:#8899aa;text-align:center">UE 虚拟数字人实时驱动</div>
-      </div>
+    <div style="max-width:800px;margin:0 auto;background:#0d1b2a;border:1px solid #2a3f5f;border-radius:8px;overflow:hidden">
+      <video controls preload="metadata" style="width:100%;display:block">
+        <source src="/video/lab3/健美操.mp4" type="video/mp4">
+      </video>
+      <div style="padding:8px 12px;font-size:12px;color:#8899aa;text-align:center">健美操动捕采集录制</div>
     </div>
 
     <h3>异常注入 — 遮挡标记点</h3>
@@ -227,25 +219,6 @@ body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;backgroun
       </div>
     </div>
 
-    <div class="demo-video">
-      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:12px;flex-wrap:wrap">
-        <button onclick="loadVideo('ue5')" style="padding:6px 16px;background:#4472C4;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">UE5 数字人驱动</button>
-        <button onclick="loadVideo('motive')" style="padding:6px 16px;background:#27ae60;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">Motive 骨骼追踪</button>
-      </div>
-      <video id="demoPlayer" controls style="width:100%;max-width:800px;border-radius:8px;display:none;background:#000"></video>
-      <p id="videoHint" style="font-size:13px;color:#667;margin-top:8px">点击上方按钮加载演示视频</p>
-    </div>
-    <script>
-    var videoMap = {
-      ue5: '/video/案例4/我的项目 - 虚幻编辑器 2026-05-26 19-33-38.mp4',
-      motive: '/video/案例4/案例4数字人/Motive_Body 3.2.0.2 Final 2026-05-26 19-33-49.mp4'
-    };
-    function loadVideo(key) {
-      var v = document.getElementById('demoPlayer');
-      v.src = videoMap[key]; v.style.display = 'block'; v.play();
-      document.getElementById('videoHint').style.display = 'none';
-    }
-    </script>
   </div>
 
   <!-- Motion Capture Quality Dashboard (Kinetics Toolkit) -->
@@ -313,11 +286,17 @@ body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;backgroun
       </table>
     </div>
 
-    <h3>质量指标对比图</h3>
+    <h3>关节质量分布对比图</h3>
     <div style="margin:12px 0"><img src="/static/case1_quality_comparison.png" style="width:100%;border-radius:8px"></div>
 
-    <h3>右腕 X 轨迹对比</h3>
+    <h3>右腕 X 轨迹对比 — 四种条件叠加</h3>
     <div style="margin:12px 0"><img src="/static/case1_trajectory_comparison.png" style="width:100%;border-radius:8px"></div>
+
+    <h3>各条件右腕 X 轨迹分列对比</h3>
+    <div style="margin:12px 0"><img src="/static/case1_per_condition_trajectory.png" style="width:100%;border-radius:8px"></div>
+
+    <h3>关键关节 RMS 抖动对比</h3>
+    <div style="margin:12px 0"><img src="/static/case1_rms_jitter_comparison.png" style="width:100%;border-radius:8px"></div>
   </div>
 
   <!-- Key Observations -->
