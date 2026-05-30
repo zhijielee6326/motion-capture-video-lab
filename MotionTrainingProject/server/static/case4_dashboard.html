@@ -11,11 +11,9 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
 .header { background: #1b2838; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a3f5f; }
 .header h1 { font-size: 18px; color: #7ec8e3; }
 .header select { padding: 6px 12px; background: #1b2838; color: #e0e0e0; border: 1px solid #2a3f5f; border-radius: 4px; }
-.container { max-width: 1200px; margin: 16px auto; padding: 0 16px; display: grid; grid-template-columns: 1fr 340px; gap: 16px; }
-.card { background: #1b2838; border-radius: 8px; border: 1px solid #2a3f5f; padding: 16px; }
+.container { max-width: 1100px; margin: 16px auto; padding: 0 16px; }
+.card { background: #1b2838; border-radius: 8px; border: 1px solid #2a3f5f; padding: 16px; margin-bottom: 16px; }
 .card h3 { font-size: 14px; color: #7ec8e3; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-.left-col { display: flex; flex-direction: column; gap: 16px; }
-.right-col { display: flex; flex-direction: column; gap: 16px; }
 .btn { padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
 .btn-primary { background: #4472C4; color: #fff; }
 .btn-primary:hover { background: #3a64b0; }
@@ -142,52 +140,53 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
     </div>
   </div>
 
-  <div class="left-col">
-    <!-- Video Mode -->
-    <div id="videoSection" class="card">
-      <h3>演练视频回放</h3>
-      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
-        <select id="videoSource" style="padding:4px 8px;background:#0d1b2a;color:#e0e0e0;border:1px solid #2a3f5f;border-radius:4px;font-size:12px">
-          <option value="ue5">UE5 场景画面</option>
-          <option value="motive">Motive 骨骼追踪</option>
-        </select>
-        <button class="btn btn-success" onclick="startVideoDrill()" id="btnStartDrill">开始演练</button>
-        <button class="btn" style="background:#555;color:#fff" onclick="resetDrill()">重置</button>
-      </div>
-      <div class="video-wrap">
-        <video id="drillVideo" preload="metadata" style="width:100%;display:block"></video>
-      </div>
-      <div class="timeline-bar" id="timelineBar" onclick="seekTimeline(event)">
-        <div class="timeline-progress" id="timelineProgress"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:4px">
-        <span id="currentTime">00:00</span>
-        <span id="totalDuration">--:--</span>
+  <!-- Video Player (full width) -->
+  <div id="videoSection" class="card">
+    <h3>演练视频回放</h3>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+      <select id="videoSource" style="padding:4px 8px;background:#0d1b2a;color:#e0e0e0;border:1px solid #2a3f5f;border-radius:4px;font-size:12px">
+        <option value="ue5">UE5 场景画面</option>
+        <option value="motive">Motive 骨骼追踪</option>
+      </select>
+      <button class="btn btn-success" onclick="startVideoDrill()" id="btnStartDrill">开始演练</button>
+      <button class="btn" style="background:#555;color:#fff" onclick="resetDrill()">重置</button>
+    </div>
+    <div class="video-wrap">
+      <video id="drillVideo" preload="metadata" style="width:100%;display:block"></video>
+    </div>
+    <div class="timeline-bar" id="timelineBar" onclick="seekTimeline(event)">
+      <div class="timeline-progress" id="timelineProgress"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:4px">
+      <span id="currentTime">00:00</span>
+      <span id="totalDuration">--:--</span>
+    </div>
+  </div>
+
+  <!-- CSV Upload Mode (hidden by default) -->
+  <div id="uploadSection" class="hidden">
+    <div class="card">
+      <h3>数据上传</h3>
+      <div class="upload-area">
+        <p>上传动捕 CSV 文件（FZMotion 导出）</p>
+        <input type="file" id="motionCsv" accept=".csv">
+        <br><br>
+        <button class="btn btn-primary" id="btnAnalyze" onclick="analyze()">开始分析</button>
+        <button class="btn" style="background:#e67e22;color:#fff;margin-left:12px" onclick="demoEvaluate()">一键演示（抢修数据）</button>
       </div>
     </div>
+  </div>
 
-    <!-- CSV Upload Mode (hidden by default) -->
-    <div id="uploadSection" class="hidden">
-      <div class="card">
-        <h3>数据上传</h3>
-        <div class="upload-area">
-          <p>上传动捕 CSV 文件（FZMotion 导出）</p>
-          <input type="file" id="motionCsv" accept=".csv">
-          <br><br>
-          <button class="btn btn-primary" id="btnAnalyze" onclick="analyze()">开始分析</button>
-          <button class="btn" style="background:#e67e22;color:#fff;margin-left:12px" onclick="demoEvaluate()">一键演示（抢修数据）</button>
-        </div>
-      </div>
-    </div>
+  <div id="loading"><p>分析中...</p></div>
 
-    <div id="loading"><p>分析中...</p></div>
-
-    <div id="resultSection" class="hidden">
-      <div class="card">
+  <!-- Task Progress + Core Network (side by side) -->
+  <div id="resultSection" class="hidden">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card" style="margin-bottom:0">
         <h3>任务进度</h3>
         <ul class="action-list" id="actionList"></ul>
       </div>
-      <div class="card">
+      <div class="card" style="margin-bottom:0">
         <h3>核心网状态监控</h3>
         <div class="status-grid" id="networkGrid">
           <div class="net-card" data-step="终端接入"><div class="net-name">终端接入</div><div class="net-dot"></div><div class="net-label" style="color:#666">OFFLINE</div></div>
@@ -199,7 +198,8 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
     </div>
   </div>
 
-  <div class="right-col">
+  <!-- Score + Fault Injection (side by side) -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
     <div class="card" id="scoreCard" style="display:none">
       <h3>演练评分</h3>
       <div class="score-big" id="totalScore">--</div>
