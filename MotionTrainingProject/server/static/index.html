@@ -7,99 +7,183 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;background:#0d1b2a;color:#e0e0e0;min-height:100vh}
-.nav{background:#1b2838;border-bottom:1px solid #2a3f5f;padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
-.nav-brand{font-size:16px;font-weight:600;color:#7ec8e3;letter-spacing:1px}
+.nav{background:#1b2838;border-bottom:1px solid #2a3f5f;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-brand{font-size:16px;font-weight:600;color:#7ec8e3;letter-spacing:1px;display:flex;align-items:center;gap:8px}
+.nav-brand svg{width:22px;height:22px;fill:#7ec8e3}
 .nav-links a{color:#8899aa;text-decoration:none;font-size:13px;margin-left:24px;transition:color .2s}
 .nav-links a:hover{color:#7ec8e3}
-.hero{background:linear-gradient(135deg,#0d1b2a 0%,#1b2838 40%,#2a4066 100%);padding:60px 32px;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at center,rgba(126,200,227,.06) 0%,transparent 60%);pointer-events:none}
-.hero h1{font-size:28px;font-weight:700;color:#fff;margin-bottom:10px;position:relative}
-.hero p{font-size:14px;color:#7ec8e3;letter-spacing:2px;position:relative}
-.container{max-width:1100px;margin:40px auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.card{background:#1b2838;border:1px solid #2a3f5f;border-radius:12px;padding:28px;transition:transform .25s,border-color .3s,box-shadow .3s;position:relative;overflow:hidden}
-.card:hover{transform:translateY(-3px);border-color:#4472C4;box-shadow:0 8px 24px rgba(68,114,196,.12)}
-.card-num{position:absolute;top:0;right:0;font-size:64px;font-weight:800;color:rgba(126,200,227,.06);line-height:1;padding:8px 16px}
-.card-tag{display:inline-block;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:600;margin-bottom:14px;letter-spacing:1px}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,#0d1b2a 0%,#1b2838 40%,#2a4066 100%);padding:64px 32px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 50%,rgba(126,200,227,.08) 0%,transparent 50%),radial-gradient(ellipse at 70% 50%,rgba(68,114,196,.06) 0%,transparent 50%);pointer-events:none}
+.hero::after{content:"";position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(126,200,227,.3),transparent)}
+.hero h1{font-size:30px;font-weight:700;color:#fff;margin-bottom:12px;position:relative;letter-spacing:1px}
+.hero .sub{font-size:13px;color:#7ec8e3;letter-spacing:3px;text-transform:uppercase;margin-bottom:24px;position:relative}
+.hero .desc{font-size:14px;color:#8899aa;max-width:680px;margin:0 auto;line-height:1.8;position:relative}
+
+/* Pipeline strip */
+.pipeline{background:#1b2838;border-top:1px solid #2a3f5f;border-bottom:1px solid #2a3f5f;padding:18px 32px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+.pipe-node{display:flex;align-items:center;gap:6px;font-size:12px;color:#8899aa;padding:4px 14px;background:#0d1b2a;border-radius:20px;border:1px solid #2a3f5f}
+.pipe-node .pn-icon{font-size:14px}
+.pipe-node .pn-label{white-space:nowrap}
+.pipe-arrow{color:#2a3f5f;font-size:14px}
+
+/* Cards */
+.container{max-width:1100px;margin:36px auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{background:#1b2838;border:1px solid #2a3f5f;border-radius:14px;padding:0;transition:transform .25s,border-color .3s,box-shadow .3s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.card-header{padding:24px 24px 0;display:flex;align-items:flex-start;justify-content:space-between}
+.card-num{font-size:48px;font-weight:800;color:rgba(126,200,227,.07);line-height:1;position:absolute;top:8px;right:16px}
+.card-tag{display:inline-block;padding:3px 12px;border-radius:12px;font-size:10px;font-weight:700;margin-bottom:12px;letter-spacing:1px}
 .tag-verify{background:rgba(39,174,96,.15);color:#27ae60;border:1px solid rgba(39,174,96,.3)}
 .tag-project{background:rgba(68,114,196,.15);color:#4472C4;border:1px solid rgba(68,114,196,.3)}
-.card h2{font-size:18px;margin-bottom:10px;color:#fff;font-weight:600}
-.card p{font-size:13px;color:#8899aa;line-height:1.7;margin-bottom:16px;min-height:55px}
-.card-tech{font-size:11px;margin-bottom:18px}
-.card-tech span{display:inline-block;background:rgba(126,200,227,.08);color:#7ec8e3;padding:3px 10px;border-radius:4px;margin:2px 4px 2px 0;border:1px solid rgba(126,200,227,.15)}
-.btn{display:inline-block;padding:10px 24px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:500;transition:all .2s;letter-spacing:.5px}
+.card-body{padding:0 24px 20px}
+.card h2{font-size:17px;margin-bottom:8px;color:#fff;font-weight:600;line-height:1.4}
+.card .desc{font-size:13px;color:#8899aa;line-height:1.7;margin-bottom:14px}
+.card-tech{font-size:11px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:4px}
+.card-tech span{display:inline-block;background:rgba(126,200,227,.08);color:#7ec8e3;padding:3px 10px;border-radius:4px;border:1px solid rgba(126,200,227,.12)}
+.card-footer{padding:14px 24px;border-top:1px solid #1a2a40;display:flex;align-items:center;justify-content:space-between}
+.btn{display:inline-block;padding:9px 22px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:500;transition:all .2s;letter-spacing:.5px}
 .btn-blue{background:#4472C4;color:#fff;border:1px solid #4472C4}
 .btn-blue:hover{background:#5a86d6;box-shadow:0 2px 8px rgba(68,114,196,.3)}
+.btn-green{background:#27ae60;color:#fff;border:1px solid #27ae60}
+.btn-green:hover{background:#219a52;box-shadow:0 2px 8px rgba(39,174,96,.3)}
 .btn-outline{background:transparent;color:#7ec8e3;border:1px solid #2a3f5f}
 .btn-outline:hover{border-color:#7ec8e3;background:rgba(126,200,227,.05)}
-.footer{text-align:center;padding:32px;font-size:12px;color:#445;border-top:1px solid #1b2838}
+.card-status{font-size:11px;color:#556}
+.card-status .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#27ae60;margin-right:4px}
+
+/* Highlight borders on hover */
+.card:nth-child(1):hover{border-color:#27ae60}
+.card:nth-child(2):hover{border-color:#4472C4}
+.card:nth-child(3):hover{border-color:#9b59b6}
+.card:nth-child(4):hover{border-color:#e67e22}
+
+/* Stats bar */
+.stats{max-width:1100px;margin:0 auto 36px;padding:0 24px;display:flex;gap:16px;justify-content:center}
+.stat{text-align:center;padding:16px 28px;background:#1b2838;border:1px solid #2a3f5f;border-radius:10px;flex:1;max-width:200px}
+.stat .val{font-size:22px;font-weight:700;color:#7ec8e3}
+.stat .label{font-size:11px;color:#556;margin-top:4px}
+
+.footer{text-align:center;padding:32px;font-size:12px;color:#445;border-top:1px solid #1b2838;margin-top:16px}
 .footer a{color:#4472C4;text-decoration:none}
-@media(max-width:700px){.container{grid-template-columns:1fr}.hero h1{font-size:22px}}
+@media(max-width:700px){.container{grid-template-columns:1fr}.hero h1{font-size:22px}.stats{flex-wrap:wrap}}
 </style>
 </head>
 <body>
+
 <div class="nav">
-  <div class="nav-brand">Motion Capture Lab</div>
+  <div class="nav-brand">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Motion Capture Lab
+  </div>
   <div class="nav-links">
     <a href="/">首页</a>
+    <a href="/case1/info">案例1</a>
     <a href="/case2/dashboard">案例2</a>
+    <a href="/case3/info">案例3</a>
     <a href="/case4/dashboard">案例4</a>
-    <a href="/docs">API</a>
   </div>
 </div>
 
 <div class="hero">
   <h1>动捕视频采集与传输实验演示系统</h1>
-  <p>MOTION CAPTURE VIDEO COLLECTION &amp; TRANSMISSION EXPERIMENT</p>
+  <div class="sub">Motion Capture Video Collection &amp; Transmission</div>
+  <div class="desc">基于 FZMotion 光学动捕系统，覆盖虚拟数字人驱动、AI 动作评分、虚拟演播内容生产、应急通信仿真四大实验案例，融合 Kinetics Toolkit 数据分析、YOLOv8-Pose 视频分析与未来网络核心网仿真技术</div>
+</div>
+
+<div class="pipeline">
+  <div class="pipe-node"><span class="pn-icon">&#x1F9B8;</span><span class="pn-label">演员穿戴</span></div>
+  <span class="pipe-arrow">&#x25B8;</span>
+  <div class="pipe-node"><span class="pn-icon">&#x1F4F7;</span><span class="pn-label">FZMotion 采集</span></div>
+  <span class="pipe-arrow">&#x25B8;</span>
+  <div class="pipe-node"><span class="pn-icon">&#x2699;</span><span class="pn-label">Motive 跟踪</span></div>
+  <span class="pipe-arrow">&#x25B8;</span>
+  <div class="pipe-node"><span class="pn-icon">&#x1F3AC;</span><span class="pn-label">MotionBuilder</span></div>
+  <span class="pipe-arrow">&#x25B8;</span>
+  <div class="pipe-node"><span class="pn-icon">&#x26A1;</span><span class="pn-label">LiveLink</span></div>
+  <span class="pipe-arrow">&#x25B8;</span>
+  <div class="pipe-node"><span class="pn-icon">&#x1F3AE;</span><span class="pn-label">UE5 虚拟场景</span></div>
+  <span class="pipe-arrow">&#x25B8;</span>
+  <div class="pipe-node"><span class="pn-icon">&#x1F916;</span><span class="pn-label">AI 评价</span></div>
 </div>
 
 <div class="container">
   <div class="card">
     <div class="card-num">01</div>
-    <span class="card-tag tag-verify">验证型</span>
-    <h2>案例1：动捕驱动虚拟数字人互动教学</h2>
-    <p>FZMotion 光学动捕 → Motive → MotionBuilder → UE LiveLink 实时驱动虚拟数字人，验证系统精度与鲁棒性。</p>
-    <div class="card-tech">
-      <span>FZMotion</span><span>Motive</span><span>MotionBuilder</span><span>UE5 LiveLink</span>
+    <div class="card-header">
+      <span class="card-tag tag-verify">验证型实验</span>
     </div>
-    <a href="/case1/info" class="btn btn-outline">实验说明</a>
+    <div class="card-body">
+      <h2>案例1：动捕驱动虚拟数字人互动教学</h2>
+      <div class="desc">FZMotion 光学动捕采集健美操数据，Kinetics Toolkit 分析数据质量，对比正常与3种异常条件（标定差/缺标记点/遮挡），验证系统精度与鲁棒性。</div>
+      <div class="card-tech">
+        <span>Kinetics Toolkit</span><span>质量对比分析</span><span>Motive 录屏</span><span>UE5 驱动</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="/case1/info" class="btn btn-green">进入案例</a>
+      <div class="card-status"><span class="dot"></span>数据已就绪</div>
+    </div>
   </div>
 
   <div class="card">
     <div class="card-num">02</div>
-    <span class="card-tag tag-project">项目型</span>
-    <h2>案例2：AI 动作质量评分系统</h2>
-    <p>骨骼数据 CSV 上传 → 四维 AI 评分 → PDF 报告 → 故障诊断与优化对比，支持 CENI 未来网络回传。</p>
-    <div class="card-tech">
-      <span>FastAPI</span><span>FZMotion CSV</span><span>Python AI</span><span>CENI</span>
+    <div class="card-header">
+      <span class="card-tag tag-project">项目设计型</span>
     </div>
-    <a href="/case2/dashboard" class="btn btn-blue">进入系统</a>
+    <div class="card-body">
+      <h2>案例2：AI 远程体育动作训练评价</h2>
+      <div class="desc">上传运动视频，YOLOv8-Pose 自动提取人体骨架关键点，四维 AI 评分（关节角度/稳定性/幅度/对称性），生成标注视频与评价报告。</div>
+      <div class="card-tech">
+        <span>YOLOv8-Pose</span><span>四维评分</span><span>标注视频</span><span>PDF 报告</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="/case2/dashboard" class="btn btn-blue">进入系统</a>
+      <div class="card-status"><span class="dot"></span>演示可用</div>
+    </div>
   </div>
 
   <div class="card">
     <div class="card-num">03</div>
-    <span class="card-tag tag-project">项目型</span>
-    <h2>案例3：虚拟演播数字人内容生产</h2>
-    <p>动捕驱动虚拟演播场景，支持多机位切换与 AI 辅助脚本生成，面向虚拟内容生产全流程。</p>
-    <div class="card-tech">
-      <span>LiveLink</span><span>UE5 虚拟演播</span><span>机位切换</span><span>AI 脚本</span>
+    <div class="card-header">
+      <span class="card-tag tag-project">项目设计型</span>
     </div>
-    <a href="/case3/info" class="btn btn-outline">实验说明</a>
+    <div class="card-body">
+      <h2>案例3：虚拟演播数字人内容生产</h2>
+      <div class="desc">动捕驱动虚拟演播场景，支持多机位切换与 AI 辅助脚本生成，Kinetics Toolkit 动捕质量分析，面向虚拟内容生产全流程。</div>
+      <div class="card-tech">
+        <span>多机位切换</span><span>AI 脚本生成</span><span>质量分析</span><span>UE5 场景</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="/case3/info" class="btn btn-outline">进入案例</a>
+      <div class="card-status"><span class="dot"></span>数据已就绪</div>
+    </div>
   </div>
 
   <div class="card">
     <div class="card-num">04</div>
-    <span class="card-tag tag-project">项目型</span>
-    <h2>案例4：应急通信演练虚拟仿真</h2>
-    <p>应急通信抢修场景仿真，动作识别 + AI 多维评价 + 核心网状态实时联动，支持地震/火灾双场景。</p>
-    <div class="card-tech">
-      <span>动作识别</span><span>核心网仿真</span><span>AI 评价</span><span>UE 场景</span>
+    <div class="card-header">
+      <span class="card-tag tag-project">项目设计型</span>
     </div>
-    <a href="/case4/dashboard" class="btn btn-blue">进入系统</a>
+    <div class="card-body">
+      <h2>案例4：应急通信演练虚拟仿真</h2>
+      <div class="desc">播放 UE5/Motive 灾害场景视频，预定义动作时间节点驱动核心网状态恢复（终端接入→用户注册→会话建立→视频回传），AI 多维评价与故障注入。</div>
+      <div class="card-tech">
+        <span>视频时间线</span><span>5G 核心网仿真</span><span>渐进评分</span><span>故障注入</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="/case4/dashboard" class="btn btn-blue">进入系统</a>
+      <div class="card-status"><span class="dot"></span>演示可用</div>
+    </div>
   </div>
 </div>
 
 <div class="footer">
-  动捕视频采集与传输实验 &copy; 2026 &nbsp;|&nbsp; <a href="/docs">API 文档</a>
+  动捕视频采集与传输实验 &copy; 2026 &nbsp;|&nbsp; FZMotion + Motive + MotionBuilder + UE5 + AI
 </div>
 </body>
 </html>
