@@ -166,50 +166,16 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
     </div>
   </div>
 
+  <!-- Video Analysis Section (YOLOv8-Pose) — Primary -->
   <div class="card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <h3 style="margin:0">上传动作数据（CSV）</h3>
-      <button type="button" class="btn" style="background:#e67e22;color:#fff;font-size:13px;padding:8px 20px" onclick="demoEvaluate()">一键演示（运球数据）</button>
-    </div>
-    <form id="uploadForm" class="upload-row">
-      <div class="field">
-        <label>标准动作 CSV</label>
-        <input type="file" id="stdCsv" accept=".csv" required>
-      </div>
-      <div class="field">
-        <label>学生动作 CSV</label>
-        <input type="file" id="stuCsv" accept=".csv" required>
-      </div>
-      <div class="field">
-        <label>学生ID</label>
-        <input type="text" id="studentId" value="S001" style="width:80px">
-      </div>
-      <div class="field">
-        <label>动作类型</label>
-        <select id="actionType">
-          <option value="dribble" selected>原地运球</option>
-          <option value="aerobics">健美操</option>
-          <option value="basketball_shot">篮球投篮</option>
-          <option value="gymnastics">体操</option>
-          <option value="dance">舞蹈</option>
-          <option value="rehab">康复训练</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-primary" id="btnScore">开始评分</button>
-    </form>
-  </div>
-
-  <div id="loading"><p>处理中...</p></div>
-
-  <!-- Video Analysis Section (YOLOv8-Pose) -->
-  <div class="card" style="margin-top:0">
-    <h3 style="margin-bottom:12px">视频分析（YOLOv8-Pose）<span style="font-size:12px;color:#8899aa;font-weight:400;margin-left:8px">上传运动视频，AI 自动提取骨架并评分</span></h3>
+    <h3 style="margin-bottom:12px">视频动作分析（YOLOv8-Pose）<span style="font-size:12px;color:#8899aa;font-weight:400;margin-left:8px">上传运动视频，AI 自动提取骨架并评分</span></h3>
     <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap">
       <div class="field">
         <label>运动视频</label>
         <input type="file" id="videoFile" accept=".mp4,.avi,.mov,.mkv">
       </div>
       <button type="button" class="btn btn-primary" id="btnVideo" onclick="uploadVideo()">开始分析</button>
+      <button type="button" class="btn" style="background:#27ae60;color:#fff;font-size:13px;padding:8px 20px" onclick="demoVideo()">一键演示（运球视频）</button>
     </div>
     <div id="videoProgress" style="display:none;margin-top:12px">
       <div style="background:#0d1b2a;border-radius:4px;height:20px;overflow:hidden">
@@ -241,6 +207,42 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
       </div>
     </div>
   </div>
+
+  <!-- CSV Upload (Advanced, Collapsible) -->
+  <div class="card" style="margin-top:0">
+    <div style="cursor:pointer;color:#4472C4;font-size:13px;user-select:none" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">&#x25B6; CSV 高级分析（点击展开）— 标准动作 vs 学生动作对比评分</div>
+    <div style="display:none;margin-top:16px">
+      <form id="uploadForm" class="upload-row">
+        <div class="field">
+          <label>标准动作 CSV</label>
+          <input type="file" id="stdCsv" accept=".csv" required>
+        </div>
+        <div class="field">
+          <label>学生动作 CSV</label>
+          <input type="file" id="stuCsv" accept=".csv" required>
+        </div>
+        <div class="field">
+          <label>学生ID</label>
+          <input type="text" id="studentId" value="S001" style="width:80px">
+        </div>
+        <div class="field">
+          <label>动作类型</label>
+          <select id="actionType">
+            <option value="dribble" selected>原地运球</option>
+            <option value="aerobics">健美操</option>
+            <option value="basketball_shot">篮球投篮</option>
+            <option value="gymnastics">体操</option>
+            <option value="dance">舞蹈</option>
+            <option value="rehab">康复训练</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btnScore">开始评分</button>
+        <button type="button" class="btn" style="background:#e67e22;color:#fff;font-size:13px;padding:8px 20px;margin-left:8px" onclick="demoEvaluate()">一键演示（运球数据）</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="loading"><p>处理中...</p></div>
 
   <div id="resultSection" class="hidden">
     <div class="card">
@@ -285,8 +287,8 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
       <button class="btn btn-download" id="btnReport" onclick="downloadReport()">下载 PDF 评估报告</button>
     </div>
 
-    <div id="skeleton3dSection" class="card hidden">
-      <h3 style="margin-bottom:8px">3D 骨架动画对比回放 <span style="font-size:12px;color:#8899aa;font-weight:400">（鼠标左键旋转 / 滚轮缩放 / 右键平移）</span></h3>
+    <div id="skeleton3dSection" class="card" style="display:none">
+      <h3 style="margin-bottom:8px">3D 骨架动画对比回放 <span style="font-size:12px;color:#8899aa;font-weight:400">（CSV高级分析模式可用）</span></h3>
       <div id="threejs-container" style="height:520px;"></div>
       <div class="playback-controls">
         <button class="btn-play" id="btn3dPlay" onclick="toggle3dPlay()">▶ 播放</button>
@@ -690,10 +692,7 @@ function loadSkeletonData(taskId) {
       document.getElementById('btn3dPlay').textContent = '▶ 播放';
     };
   }).catch(function(err) {
-    console.error('3D skeleton load failed:', err);
-    section.classList.remove('hidden');
-    document.getElementById('threejs-container').innerHTML =
-      '<div style="color:#f39c12;padding:40px;text-align:center">3D 骨架数据加载失败: ' + err.message + '<br><small style="color:#8899aa">请重新上传 CSV 文件后再试</small></div>';
+    console.warn('3D skeleton data not available:', err.message);
   });
 }
 
@@ -749,6 +748,29 @@ async function uploadVideo() {
     }
   } catch (err) {
     alert('上传失败: ' + err.message);
+    btn.disabled = false;
+  }
+}
+
+async function demoVideo() {
+  var btn = document.getElementById('btnVideo');
+  btn.disabled = true;
+  document.getElementById('videoProgress').style.display = 'block';
+  document.getElementById('videoProgressText').textContent = '加载运球演示视频...';
+  document.getElementById('videoProgressBar').style.width = '5%';
+  document.getElementById('videoResultSection').classList.add('hidden');
+  try {
+    var resp = await fetch('/case2/demo_video', { method: 'POST' });
+    var data = await resp.json();
+    if (data.task_id) {
+      document.getElementById('videoProgressText').textContent = 'YOLO 分析中（原地运球视频）...';
+      videoPollTimer = setInterval(function() { pollVideoStatus(data.task_id); }, 2000);
+    } else {
+      alert('演示失败: ' + (data.detail || JSON.stringify(data)));
+      btn.disabled = false;
+    }
+  } catch (err) {
+    alert('演示失败: ' + err.message);
     btn.disabled = false;
   }
 }

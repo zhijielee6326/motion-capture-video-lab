@@ -751,6 +751,18 @@ async def case2_upload_video(video: UploadFile = File(...)):
     return {"task_id": task_id, "status": "queued"}
 
 
+@app.post("/case2/demo_video")
+async def case2_demo_video():
+    dribble_path = os.path.normpath(os.path.join(BASE_DIR, "..", "data", "数据", "案例4", "UE", "原地运球.mp4"))
+    if not os.path.exists(dribble_path):
+        raise HTTPException(404, "Demo video not found")
+    task_id = str(uuid.uuid4())[:8]
+    _video_tasks[task_id] = {"status": "queued", "progress": 0, "result": None, "output_path": None, "error": None}
+    thread = threading.Thread(target=_process_video_background, args=(task_id, dribble_path), daemon=True)
+    thread.start()
+    return {"task_id": task_id, "status": "queued"}
+
+
 @app.get("/case2/video_status/{task_id}")
 async def case2_video_status(task_id: str):
     if task_id not in _video_tasks:
