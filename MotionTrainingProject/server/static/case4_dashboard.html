@@ -32,12 +32,14 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
 .action-icon.pending { background: #555; }
 .action-conf { color: #888; font-size: 11px; margin-left: auto; }
 
-.status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.status-item { background: #0d1b2a; padding: 10px; border-radius: 4px; display: flex; align-items: center; gap: 8px; font-size: 12px; transition: all .3s; }
-.status-item.changed { box-shadow: 0 0 8px rgba(39,174,96,.4); }
-.dot { width: 10px; height: 10px; border-radius: 50%; transition: all .3s; }
-.dot-green { background: #27ae60; box-shadow: 0 0 6px #27ae60; }
-.dot-red { background: #e74c3c; box-shadow: 0 0 6px #e74c3c; }
+.status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.net-card { background: #0d1b2a; border: 1px solid #2a3f5f; border-radius: 10px; padding: 18px 12px; text-align: center; transition: border-color .4s, box-shadow .4s; }
+.net-card.on { border-color: #27ae60; box-shadow: 0 0 16px rgba(39,174,96,.18); }
+.net-card .net-name { font-size: 13px; color: #aab; margin-bottom: 10px; letter-spacing: 1px; }
+.net-card .net-dot { width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px; transition: all .4s; background: #333; }
+.net-card.on .net-dot { background: #27ae60; box-shadow: 0 0 12px rgba(39,174,96,.5); }
+.net-card .net-label { font-size: 12px; font-weight: 600; letter-spacing: 1px; }
+.net-card.on .net-label { color: #27ae60; }
 
 .score-big { font-size: 42px; font-weight: 700; color: #7ec8e3; text-align: center; }
 .score-label { font-size: 12px; color: #888; text-align: center; }
@@ -187,8 +189,13 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0d1b2a; 
         <ul class="action-list" id="actionList"></ul>
       </div>
       <div class="card">
-        <h3>核心网状态</h3>
-        <div class="status-grid" id="networkGrid"></div>
+        <h3>核心网状态监控</h3>
+        <div class="status-grid" id="networkGrid">
+          <div class="net-card" data-step="终端接入"><div class="net-name">终端接入</div><div class="net-dot"></div><div class="net-label" style="color:#666">OFFLINE</div></div>
+          <div class="net-card" data-step="用户注册"><div class="net-name">用户注册</div><div class="net-dot"></div><div class="net-label" style="color:#666">OFFLINE</div></div>
+          <div class="net-card" data-step="会话建立"><div class="net-name">会话建立</div><div class="net-dot"></div><div class="net-label" style="color:#666">OFFLINE</div></div>
+          <div class="net-card" data-step="视频回传"><div class="net-name">视频回传</div><div class="net-dot"></div><div class="net-label" style="color:#666">OFFLINE</div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -349,12 +356,12 @@ function updateProgressiveUI(data, node) {
   document.getElementById('resultSection').classList.remove('hidden');
 
   if (data.network_step) {
-    document.querySelectorAll('.status-item').forEach(el => {
-      if (el.textContent.includes(data.network_step)) {
-        el.classList.add('changed');
-        setTimeout(() => el.classList.remove('changed'), 2000);
-      }
-    });
+    const card = document.querySelector(`.net-card[data-step="${data.network_step}"]`);
+    if (card) {
+      card.style.transition = 'none';
+      card.style.transform = 'scale(1.08)';
+      setTimeout(() => { card.style.transition = 'transform .4s'; card.style.transform = ''; }, 600);
+    }
   }
 }
 
@@ -379,13 +386,15 @@ function updateActionList(node) {
 }
 
 function updateNetworkGrid(status) {
-  const grid = document.getElementById('networkGrid');
-  grid.innerHTML = '';
-  Object.entries(status).forEach(function(entry) {
-    const step = entry[0], st = entry[1];
-    const dotCls = st === 'connected' ? 'dot-green' : 'dot-red';
-    const label = st === 'connected' ? '已连接' : '未连接';
-    grid.innerHTML += '<div class="status-item"><span class="dot ' + dotCls + '"></span><span>' + step + '</span><span style="margin-left:auto;color:#888">' + label + '</span></div>';
+  const cards = document.querySelectorAll('.net-card');
+  cards.forEach(card => {
+    const step = card.dataset.step;
+    const st = status[step] || 'disconnected';
+    const isOn = st === 'connected';
+    card.classList.toggle('on', isOn);
+    const label = card.querySelector('.net-label');
+    label.textContent = isOn ? 'ONLINE' : 'OFFLINE';
+    label.style.color = isOn ? '#27ae60' : '#666';
   });
 }
 
@@ -461,12 +470,15 @@ function showResult(data) {
     const icon = a.status === 'completed' ? '&#x2713;' : a.status === 'detected' ? '&#x25CF;' : String(a.id);
     actionList.innerHTML += '<li class="action-item"><span class="action-icon ' + cls + '">' + icon + '</span><span>' + a.name + '</span><span class="action-conf">' + (a.confidence * 100).toFixed(0) + '%</span></li>';
   });
-  const netGrid = document.getElementById('networkGrid');
-  netGrid.innerHTML = '';
   (data.core_network_status || []).forEach(s => {
-    const dotCls = s.status === 'connected' ? 'dot-green' : 'dot-red';
-    const label = s.status === 'connected' ? '已连接' : '未连接';
-    netGrid.innerHTML += '<div class="status-item"><span class="dot ' + dotCls + '"></span><span>' + s.step + '</span><span style="margin-left:auto;color:#888">' + label + '</span></div>';
+    const card = document.querySelector(`.net-card[data-step="${s.step}"]`);
+    if (card) {
+      const isOn = s.status === 'connected';
+      card.classList.toggle('on', isOn);
+      const label = card.querySelector('.net-label');
+      label.textContent = isOn ? 'ONLINE' : 'OFFLINE';
+      label.style.color = isOn ? '#27ae60' : '#666';
+    }
   });
   document.getElementById('totalScore').textContent = data.total_score;
   document.getElementById('scoreCard').style.display = 'block';
